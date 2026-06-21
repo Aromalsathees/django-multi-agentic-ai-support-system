@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Order #{{ order.id }} — CoolBreeze AC</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body {
+      background: #f0f4f8;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .navbar {
+      background: #1a1a2e;
+      padding: 14px 24px;
+    }
+
+    .navbar-brand {
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .navbar-text {
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+    }
+
+    .logout-btn {
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      margin-left: 16px;
+      padding: 0;
+    }
+
+    .logout-btn:hover {
+      color: #fff;
+    }
+
+    .back-link {
+      font-size: 13px;
+      color: #6c757d;
+      text-decoration: none;
+      display: inline-block;
+      margin: 24px 0 16px;
+    }
+
+    .back-link:hover {
+      color: #1a1a2e;
+    }
+
+    .detail-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 16px;
+    }
+
+    .detail-card h6 {
+      font-weight: 700;
+      color: #1a1a2e;
+      margin: 0 0 20px;
+      font-size: 15px;
+    }
+
+    .detail-row {
+      display: flex;
+      padding: 10px 0;
+      border-bottom: 1px solid #f1f3f5;
+      font-size: 13px;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      color: #6c757d;
+      width: 160px;
+      flex-shrink: 0;
+    }
+
+    .detail-value {
+      color: #1a1a2e;
+      font-weight: 500;
+    }
+
+    .badge-pending {
+      background: #cfe2ff;
+      color: #084298;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .badge-dispatched {
+      background: #fff3cd;
+      color: #856404;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .badge-delivered {
+      background: #d1e7dd;
+      color: #0a3622;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .badge-cancelled {
+      background: #f8d7da;
+      color: #58151c;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .refund-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f1f3f5;
+      font-size: 13px;
+    }
+
+    .refund-item:last-child {
+      border-bottom: none;
+    }
+
+    .refund-reason {
+      color: #495057;
+    }
+
+    .badge-approved {
+      background: #d1e7dd;
+      color: #0a3622;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .badge-denied {
+      background: #f8d7da;
+      color: #58151c;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .help-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+
+    .help-card h6 {
+      font-weight: 700;
+      color: #1a1a2e;
+      margin: 16px 0 8px;
+    }
+
+    .help-card p {
+      font-size: 13px;
+      color: #6c757d;
+      margin: 0 0 20px;
+    }
+
+    .btn-help {
+      background: #1a1a2e;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .btn-help:hover {
+      background: #2d2d4e;
+      color: #fff;
+    }
+
+    #chat-box{
+      height: 500px;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+    }
+
+    #chat-box.visible{
+      opacity: 1;
+    }
+
+    .chat-messages{
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .agent-message{
+      background: #f3f4f6;
+      border-radius: 0 10px 10px 10px;
+      white-space: pre-line;
+    }
+
+    .customer-message{
+      background-color: #1a1a2e;
+      color: #fff;
+      border-radius: 10px 0 10px 10px;
+      margin-left: auto;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar d-flex align-items-center justify-content-between">
+  <span class="navbar-brand">❄️ CoolBreeze AC</span>
+  <div class="d-flex align-items-center">
+    <span class="navbar-text">Hi, {{ request.user.first_name }}</span>
+    <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+      {% csrf_token %}
+      <button type="submit" class="logout-btn">Logout</button>
+    </form>
+  </div>
+</nav>
+
+<div class="container">
+
+  <a href="{% url 'orders_list' %}" class="back-link">← Back to Orders</a>
+
+  <div class="row g-3">
+
+    <div class="col-md-8">
+      <div class="detail-card">
+        <h6>Order #{{ order.id }} — {{ order.product_name }}</h6>
+
+        <div class="detail-row">
+          <span class="detail-label">Status</span>
+          <span class="detail-value">
+            <span class="badge-{{ order.status }}">
+              {{ order.get_status_display }}
+            </span>
+          </span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">Amount</span>
+          <span class="detail-value">₹{{ order.amount }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">Ordered on</span>
+          <span class="detail-value">{{ order.created_at|date:"d M Y, h:i A" }}</span>
+        </div>
+
+        {% if order.carrier %}
+        <div class="detail-row">
+          <span class="detail-label">Carrier</span>
+          <span class="detail-value">{{ order.carrier }}</span>
+        </div>
+        {% endif %}
+
+        {% if order.tracking_number %}
+        <div class="detail-row">
+          <span class="detail-label">Tracking Number</span>
+          <span class="detail-value">{{ order.tracking_number }}</span>
+        </div>
+        {% endif %}
+
+        {% if order.delivery %}
+        <div class="detail-row">
+          <span class="detail-label">Delivery Address</span>
+          <span class="detail-value">{{ order.delivery }}</span>
+        </div>
+        {% endif %}
+
+      </div>
+
+      {% if refunds %}
+      <div class="detail-card">
+        <h6>Refund History</h6>
+        {% for refund in refunds %}
+        <div class="refund-item">
+          <span class="refund-reason">{{ refund.reason }}</span>
+          <span class="badge-{{ refund.status }}">
+            {{ refund.get_status_display }}
+          </span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+    </div>
+
+    <div class="col-md-4">
+      <!-- Help card - visible by default -->
+      <div class="help-card" id="help-card">
+        <div style="font-size:32px;">💬</div>
+        <h6>Need help with this order?</h6>
+        <p>Our AI support agent can help you with delivery issues, refunds, or any other concerns.</p>
+        <button onclick="showChat()" class="btn-help">Get Help</button>
+      </div>
+
+      <!-- Chat box - hidden by default -->
+       <div id="chat-box" class="card">
+        <!-- Header -->
+         <div class="card-header d-flex align-items-center gap-2">
+          <div style="width: 8px;height: 8px; border-radius: 50%; background-color: green;"></div>
+          <span class="fw-semibold" style="font-size: 13px;">Support Agent</span>
+         </div>
+
+         <!-- Chat area -->
+          <div id="chat-messages" class="chat-messages p-3 d-flex flex-column gap-2">
+            {% if conversation %}
+            <!-- print the previous messages -->
+             {% for msg in previous_messages %}
+              {% if msg.role == 'user' %}
+                <div class="customer-message p-2 px-3" style="font-size: 13px;max-width: 85%;">
+                  {{ msg.content }}
+                </div>
+              {% else %}
+                <div class="agent-message p-2 px-3" style="font-size: 13px;max-width: 85%;">
+                  {{ msg.content }}
+                </div>
+              {% endif %}
+             {% endfor %}
+            {% else %}
+            <div class="agent-message p-2 px-3" style="font-size: 13px; max-width: 85%;">
+              Hi {{ request.user.first_name }}, I'm Maya, How can I help you with your order today?
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Chat footer -->
+           <div class="card-footer d-flex">
+            <input type="text" id="chat-input" class="form-control form-control-sm" placeholder="Type your message...">
+            <button class="btn btn-dark btn-sm px-3" onclick="sendMessage()">Send</button>
+           </div>
+       </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+  function showTyping(){
+    const messages = document.getElementById("chat-messages");
+    messages.insertAdjacentHTML("beforeend", `
+    <div id="typing-indicator" class="agent-message p-2" style="font-size:13px;max-width:85%;">
+      Typing...
+    </div>
+    `);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function hideTyping(){
+    document.getElementById("typing-indicator").remove();
+  }
+
+  function showChat(){
+    document.getElementById("help-card").style.display = "none";
+
+    const chatBox = document.getElementById("chat-box");
+
+    chatBox.classList.add("visible")
+  }
+
+  function appendMessage(text, type){
+    const messages = document.getElementById("chat-messages");
+
+    const div = document.createElement("div");
+    div.classList.add(type === "customer" ? "customer-message" : "agent-message");
+    div.classList.add("p-2", "px-3");
+    div.style.fontSize = "13px";
+    div.style.maxWidth = "85%";
+    div.innerText = text;
+
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  async function sendMessage(){
+    const input = document.getElementById("chat-input");
+    const message = input.value.trim();
+
+    // don't send empty message
+    if(!message) return;
+
+    appendMessage(message, "customer");
+
+    input.value = "";
+    input.disabled = true;
+
+    const typingTimeout = setTimeout(() => showTyping(), 1000); // show typing after 2 seconds
+
+    // send message to django view
+    try{
+      const response = await fetch("/support/chat/{{order.id}}/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({message: message})
+      });
+
+      const data = await response.json()
+      hideTyping();
+      appendMessage(data.reply, "agent");
+      input.disabled = false;
+      input.focus();
+    }catch(error){
+      console.error("Error: ", error)
+      appendMessage("Sorry, something went wrong", "agent")
+      input.disabled = false;
+      input.focus();
+    } finally{
+      clearTimeout(typingTimeout);
+      hideTyping();
+      
+    }
+  }
+
+    // send message on Enter key
+    document.getElementById("chat-input").addEventListener("keydown", function(e){
+      if(e.key === "Enter") sendMessage();
+    })
+</script>
+</body>
+</html>

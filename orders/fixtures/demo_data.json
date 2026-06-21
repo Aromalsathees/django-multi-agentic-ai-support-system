@@ -1,0 +1,399 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "aromal",
+      "email": "aromalsatheesh802003@gmail.com",
+      "first_name": "Admin",
+      "last_name": "",
+      "is_staff": true,
+      "is_superuser": true,
+      "is_active": true,
+      "password": "pbkdf2_sha256$1200000$8b0UHu0122FCaqBR7nD8ea$5uR+JXZiwbgh93MIkIfEkmh1Wh5vqM9t0cB2xaLQ0as=",
+      "date_joined": "2024-01-01T00:00:00Z",
+      "last_login": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "username": "rathan",
+      "email": "rathan.kumar@gmail.com",
+      "first_name": "Rathan",
+      "last_name": "Kumar",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "password": "pbkdf2_sha256$1200000$8b0UHu0122FCaqBR7nD8ea$5uR+JXZiwbgh93MIkIfEkmh1Wh5vqM9t0cB2xaLQ0as=",
+      "date_joined": "2024-01-01T00:00:00Z",
+      "last_login": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "username": "priya",
+      "email": "priya.sharma@gmail.com",
+      "first_name": "Priya",
+      "last_name": "Sharma",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "password": "pbkdf2_sha256$1200000$8b0UHu0122FCaqBR7nD8ea$5uR+JXZiwbgh93MIkIfEkmh1Wh5vqM9t0cB2xaLQ0as=",
+      "date_joined": "2024-01-01T00:00:00Z",
+      "last_login": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+      "username": "arjun",
+      "email": "arjun.nair@gmail.com",
+      "first_name": "Arjun",
+      "last_name": "Nair",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "password": "pbkdf2_sha256$1200000$8b0UHu0122FCaqBR7nD8ea$5uR+JXZiwbgh93MIkIfEkmh1Wh5vqM9t0cB2xaLQ0as=",
+      "date_joined": "2024-01-01T00:00:00Z",
+      "last_login": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "orders.product",
+    "pk": 1,
+    "fields": {
+      "name": "CoolBreeze 1 Ton 3 Star Window AC",
+      "description": "Energy efficient 1 ton window AC with 3 star rating, auto restart, sleep mode and dust filter. Ideal for rooms up to 120 sq ft.",
+      "price": "28999.00",
+      "category": "Window AC",
+      "in_stock": true
+    }
+  },
+  {
+    "model": "orders.product",
+    "pk": 2,
+    "fields": {
+      "name": "CoolBreeze 1.5 Ton 3 Star Split AC",
+      "description": "1.5 ton split AC with 3 star rating, turbo cool technology, auto clean and dehumidifier function. Ideal for rooms up to 180 sq ft.",
+      "price": "34999.00",
+      "category": "Split AC",
+      "in_stock": true
+    }
+  },
+  {
+    "model": "orders.product",
+    "pk": 3,
+    "fields": {
+      "name": "CoolBreeze 1.5 Ton 5 Star Inverter Split AC",
+      "description": "Premium 1.5 ton inverter split AC with 5 star rating, wifi control, auto diagnosis and 4 way swing. Ideal for rooms up to 180 sq ft.",
+      "price": "42999.00",
+      "category": "Split AC",
+      "in_stock": true
+    }
+  },
+  {
+    "model": "orders.product",
+    "pk": 4,
+    "fields": {
+      "name": "CoolBreeze 2 Ton 3 Star Split AC",
+      "description": "Heavy duty 2 ton split AC with 3 star rating, rapid cooling, self cleaning filter and auto restart after power cut. Ideal for rooms up to 240 sq ft.",
+      "price": "45999.00",
+      "category": "Split AC",
+      "in_stock": true
+    }
+  },
+  {
+    "model": "orders.product",
+    "pk": 5,
+    "fields": {
+      "name": "CoolBreeze 1 Ton 5 Star Inverter Split AC",
+      "description": "Compact 1 ton inverter split AC with 5 star rating, voice control, pm 2.5 filter and weekly timer. Ideal for rooms up to 120 sq ft.",
+      "price": "38999.00",
+      "category": "Split AC",
+      "in_stock": true
+    }
+  },
+  {
+    "model": "orders.product",
+    "pk": 6,
+    "fields": {
+      "name": "CoolBreeze 2 Ton 5 Star Inverter Cassette AC",
+      "description": "Commercial grade 2 ton cassette AC with 5 star inverter rating, 360 degree airflow, central drain pump and remote diagnostics. Ideal for offices up to 300 sq ft.",
+      "price": "68999.00",
+      "category": "Cassette AC",
+      "in_stock": true
+    }
+  },
+  {
+    "model": "orders.product",
+    "pk": 7,
+    "fields": {
+      "name": "CoolBreeze 1.5 Ton Portable AC",
+      "description": "No installation required portable AC with 1.5 ton capacity, dual fan speed, dehumidifier mode and 24 hour timer. Ideal for temporary cooling needs.",
+      "price": "32999.00",
+      "category": "Portable AC",
+      "in_stock": true
+    }
+  },
+  {
+    "model": "orders.product",
+    "pk": 8,
+    "fields": {
+      "name": "CoolBreeze 2 Ton Tower AC",
+      "description": "Floor standing 2 ton tower AC with inverter technology, 7 speed fan, air purifier with HEPA filter and child lock. Ideal for large halls up to 280 sq ft.",
+      "price": "55999.00",
+      "category": "Tower AC",
+      "in_stock": true
+    }
+  },
+  {
+    "model": "orders.product",
+    "pk": 9,
+    "fields": {
+      "name": "CoolBreeze AC Voltage Stabilizer 5KVA",
+      "description": "Heavy duty voltage stabilizer for ACs up to 2 ton. Protects against voltage fluctuations between 90V to 290V with time delay and digital display.",
+      "price": "4999.00",
+      "category": "Accessories",
+      "in_stock": true
+    }
+  },
+  {
+    "model": "orders.product",
+    "pk": 10,
+    "fields": {
+      "name": "CoolBreeze Universal AC Remote Control",
+      "description": "Universal remote compatible with all CoolBreeze AC models. Features LCD display, timer, sleep mode and turbo button. Includes 2 AAA batteries.",
+      "price": "899.00",
+      "category": "Accessories",
+      "in_stock": true
+    }
+  },
+  {
+    "model": "orders.order",
+    "pk": 1,
+    "fields": {
+      "user": 2,
+      "product": 3,
+      "product_name": "CoolBreeze 1.5 Ton 5 Star Inverter Split AC",
+      "amount": "42999.00",
+      "status": "dispatched",
+      "carrier": "BlueDart",
+      "tracking_number": "BD99281733",
+      "delivery": "14, Residency Road, Shivajinagar, Bangalore - 560025",
+      "created_at": "2025-04-26T10:30:00Z",
+      "updated_at": "2025-04-26T10:30:00Z"
+    }
+  },
+  {
+    "model": "orders.order",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "product": 2,
+      "product_name": "CoolBreeze 1.5 Ton 3 Star Split AC",
+      "amount": "34999.00",
+      "status": "delivered",
+      "carrier": "Delhivery",
+      "tracking_number": "DL44729103",
+      "delivery": "14, Residency Road, Shivajinagar, Bangalore - 560025",
+      "created_at": "2025-03-11T14:00:00Z",
+      "updated_at": "2025-03-11T14:00:00Z"
+    }
+  },
+  {
+    "model": "orders.order",
+    "pk": 3,
+    "fields": {
+      "user": 2,
+      "product": 9,
+      "product_name": "CoolBreeze AC Voltage Stabilizer 5KVA",
+      "amount": "4999.00",
+      "status": "delivered",
+      "carrier": "Delhivery",
+      "tracking_number": "DL88103742",
+      "delivery": "14, Residency Road, Shivajinagar, Bangalore - 560025",
+      "created_at": "2025-02-16T09:15:00Z",
+      "updated_at": "2025-02-16T09:15:00Z"
+    }
+  },
+  {
+    "model": "orders.order",
+    "pk": 4,
+    "fields": {
+      "user": 2,
+      "product": 10,
+      "product_name": "CoolBreeze Universal AC Remote Control",
+      "amount": "899.00",
+      "status": "cancelled",
+      "carrier": "",
+      "tracking_number": "",
+      "delivery": "14, Residency Road, Shivajinagar, Bangalore - 560025",
+      "created_at": "2025-04-28T16:45:00Z",
+      "updated_at": "2025-04-28T16:45:00Z"
+    }
+  },
+  {
+    "model": "orders.order",
+    "pk": 5,
+    "fields": {
+      "user": 2,
+      "product": 5,
+      "product_name": "CoolBreeze 1 Ton 5 Star Inverter Split AC",
+      "amount": "38999.00",
+      "status": "pending",
+      "carrier": "",
+      "tracking_number": "",
+      "delivery": "14, Residency Road, Shivajinagar, Bangalore - 560025",
+      "created_at": "2025-04-30T20:00:00Z",
+      "updated_at": "2025-04-30T20:00:00Z"
+    }
+  },
+  {
+    "model": "orders.order",
+    "pk": 6,
+    "fields": {
+      "user": 3,
+      "product": 6,
+      "product_name": "CoolBreeze 2 Ton 5 Star Inverter Cassette AC",
+      "amount": "68999.00",
+      "status": "dispatched",
+      "carrier": "Ekart",
+      "tracking_number": "EK556612309",
+      "delivery": "7, Linking Road, Bandra West, Mumbai - 400050",
+      "created_at": "2025-04-27T11:00:00Z",
+      "updated_at": "2025-04-27T11:00:00Z"
+    }
+  },
+  {
+    "model": "orders.order",
+    "pk": 7,
+    "fields": {
+      "user": 3,
+      "product": 4,
+      "product_name": "CoolBreeze 2 Ton 3 Star Split AC",
+      "amount": "45999.00",
+      "status": "delivered",
+      "carrier": "BlueDart",
+      "tracking_number": "BD77412390",
+      "delivery": "7, Linking Road, Bandra West, Mumbai - 400050",
+      "created_at": "2025-03-01T08:30:00Z",
+      "updated_at": "2025-03-01T08:30:00Z"
+    }
+  },
+  {
+    "model": "orders.order",
+    "pk": 8,
+    "fields": {
+      "user": 4,
+      "product": 1,
+      "product_name": "CoolBreeze 1 Ton 3 Star Window AC",
+      "amount": "28999.00",
+      "status": "delivered",
+      "carrier": "Delhivery",
+      "tracking_number": "DL33219876",
+      "delivery": "23, Anna Salai, Teynampet, Chennai - 600018",
+      "created_at": "2025-03-15T13:20:00Z",
+      "updated_at": "2025-03-15T13:20:00Z"
+    }
+  },
+  {
+    "model": "orders.order",
+    "pk": 9,
+    "fields": {
+      "user": 4,
+      "product": 8,
+      "product_name": "CoolBreeze 2 Ton Tower AC",
+      "amount": "55999.00",
+      "status": "dispatched",
+      "carrier": "BlueDart",
+      "tracking_number": "BD10293847",
+      "delivery": "23, Anna Salai, Teynampet, Chennai - 600018",
+      "created_at": "2025-04-25T17:10:00Z",
+      "updated_at": "2025-04-25T17:10:00Z"
+    }
+  },
+  {
+    "model": "orders.order",
+    "pk": 10,
+    "fields": {
+      "user": 3,
+      "product": 7,
+      "product_name": "CoolBreeze 1.5 Ton Portable AC",
+      "amount": "32999.00",
+      "status": "pending",
+      "carrier": "",
+      "tracking_number": "",
+      "delivery": "7, Linking Road, Bandra West, Mumbai - 400050",
+      "created_at": "2025-05-01T10:00:00Z",
+      "updated_at": "2025-05-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "orders.refundrequest",
+    "pk": 1,
+    "fields": {
+      "order": 3,
+      "user": 2,
+      "reason": "Stabilizer stopped working after 3 days. AC not turning on.",
+      "status": "approved",
+      "created_at": "2025-02-20T10:00:00Z"
+    }
+  },
+  {
+    "model": "orders.refundrequest",
+    "pk": 2,
+    "fields": {
+      "order": 2,
+      "user": 2,
+      "reason": "AC is making loud noise during operation. Not acceptable.",
+      "status": "denied",
+      "created_at": "2025-03-20T14:30:00Z"
+    }
+  },
+  {
+    "model": "orders.refundrequest",
+    "pk": 3,
+    "fields": {
+      "order": 7,
+      "user": 3,
+      "reason": "AC not cooling properly even after installation by technician.",
+      "status": "approved",
+      "created_at": "2025-03-10T09:00:00Z"
+    }
+  },
+  {
+    "model": "orders.refundrequest",
+    "pk": 4,
+    "fields": {
+      "order": 8,
+      "user": 4,
+      "reason": "Window AC leaking water inside the room.",
+      "status": "pending",
+      "created_at": "2025-03-25T16:00:00Z"
+    }
+  },
+  {
+    "model": "orders.refundrequest",
+    "pk": 5,
+    "fields": {
+      "order": 1,
+      "user": 2,
+      "reason": "AC dispatched 5 days ago but not delivered yet. Want refund.",
+      "status": "pending",
+      "created_at": "2025-04-30T11:00:00Z"
+    }
+  }
+]

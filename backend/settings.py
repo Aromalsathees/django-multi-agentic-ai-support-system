@@ -38,7 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'orders',
+    'account',
+    'support'
 ]
+
+
+AUTH_USER_MODEL = 'account.CustomUser'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -76,7 +82,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ai_employee_db',
+        'NAME': 'dj_agentic_system',
         'USER': 'root',
         'PASSWORD':'aromal',
         'HOST':'localhost',

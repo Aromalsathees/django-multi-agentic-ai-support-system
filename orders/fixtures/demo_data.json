@@ -1,6 +1,6 @@
 [
   {
-    "model": "auth.user",
+    "model": "account.CustomUser",
     "pk": 1,
     "fields": {
       "username": "aromal",
@@ -18,7 +18,7 @@
     }
   },
   {
-    "model": "auth.user",
+    "model": "account.CustomUser",
     "pk": 2,
     "fields": {
       "username": "rathan",
@@ -36,7 +36,7 @@
     }
   },
   {
-    "model": "auth.user",
+    "model": "account.CustomUser",
     "pk": 3,
     "fields": {
       "username": "priya",
@@ -54,7 +54,7 @@
     }
   },
   {
-    "model": "auth.user",
+    "model": "account.CustomUser",
     "pk": 4,
     "fields": {
       "username": "arjun",

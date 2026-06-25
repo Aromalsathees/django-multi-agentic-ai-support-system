@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User 
+from account.models import CustomUser 
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
@@ -18,7 +18,7 @@ class Order(models.Model):
         ("cancalled" , "Cancelled"),
     ]
 
-    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='orders')
+    user = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='orders')
     product = models.ForeignKey(Product,on_delete=models.SET_NULL, null=True, related_name='oreders')
     product_name = models.CharField(max_length=255)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -41,7 +41,7 @@ class RefundReQuest(models.Model):
     ]
 
     order = models.ForeignKey(Order,on_delete=models.CASCADE)
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
     reason = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField()

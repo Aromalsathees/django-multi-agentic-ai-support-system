@@ -3,7 +3,7 @@ from .models import Order, RefundReQuest
 from django.contrib.auth.decorators import login_required
 
 
-@login_required
+@login_required(login_url='login_view')
 def orders_list(request):
     orders = Order.objects.filter(user=request.user)
     context = {

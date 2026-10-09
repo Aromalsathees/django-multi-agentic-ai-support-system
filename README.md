@@ -1,6 +1,6 @@
 AI Employees for Customer Support | Multi-Agent AI System
 
-🚀 An autonomous Multi-Agent AI Customer Support System built with Django, Python, Claude API, RAG, ChromaDB, and LangChain.
+🚀 An autonomous Multi-Agent AI Customer Support System built with Django, Python, Claude API, RAG, ChromaDB.
 
 This project simulates AI employees collaborating together to handle customer support operations, assess fraud risks, retrieve company knowledge, and make intelligent business decisions with real-time monitoring.
 
@@ -93,7 +93,6 @@ Backend
 AI
 
 - Claude API
-- LangChain
 
 Vector Database
 

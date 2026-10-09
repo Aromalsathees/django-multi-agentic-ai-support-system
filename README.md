@@ -88,7 +88,6 @@ Backend
 
 - Python
 - Django
-- Django REST Framework
 
 AI
 
@@ -100,17 +99,13 @@ Vector Database
 
 Database
 
-- SQLite / PostgreSQL
+PostgreSQL
 
 Frontend
 
 - HTML
 - CSS
 - JavaScript
-
-Deployment
-
-- Railway
 
 Learning Outcomes
 
@@ -123,7 +118,6 @@ Through this project, I gained hands-on experience in:
 - Vector Databases
 - Real-Time Streaming
 - Django Backend Development
-- Production Deployment
 
 Future Improvements
 

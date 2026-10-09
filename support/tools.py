@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from orders.models import Order, RefundRequest
+from orders.models import Order, RefundReQuest
 from django.utils import timezone
 from .tracking_data import DELIVERY_DATA
 from .rag import search_knowledge_base as rag_search
@@ -26,7 +26,7 @@ def get_order_details(order_id):
     
 
 def get_refund_history(user_id):
-    refunds = RefundRequest.objects.filter(user_id=user_id).order_by("-created_at")
+    refunds = RefundReQuest.objects.filter(user_id=user_id).order_by("-created_at")
 
     history = []
     for refund in refunds:
@@ -59,7 +59,7 @@ def check_delivery_status(tracking_number, carrier):
 
 def get_customer_risk_profile(user_id):
     print('user_id==>', user_id)
-    refunds = RefundRequest.objects.filter(user_id=user_id)
+    refunds = RefundReQuest.objects.filter(user_id=user_id)
     orders = Order.objects.filter(user_id=user_id)
 
     # recent 90 days refund requests

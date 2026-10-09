@@ -15,7 +15,6 @@ Features
 - Real-Time Response Streaming
 - RAG (Retrieval-Augmented Generation)
 - ChromaDB Vector Database Integration
-- LangChain Agent Orchestration
 - Claude API Integration
 - Customer Support Automation
 - Fraud Risk Assessment
@@ -123,7 +122,6 @@ Through this project, I gained hands-on experience in:
 - AI Workflow Orchestration
 - RAG Implementation
 - Vector Databases
-- LangChain
 - Real-Time Streaming
 - Django Backend Development
 - Production Deployment
@@ -132,7 +130,7 @@ Future Improvements
 
 - Memory-enabled Agents
 - Multi-LLM Support
-- Voice-based Customer Support
+- Voice-based-customer-support
 - Analytics Dashboard
 - Human-in-the-loop Workflows
 - Advanced Agent Monitoring
@@ -143,4 +141,3 @@ Aromal Satheesh
 
 Python Developer | Django Developer | Agentic AI Enthusiast
 
-⭐ Star the repository if you found it useful.

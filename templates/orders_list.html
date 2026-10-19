@@ -114,7 +114,7 @@
       font-weight: 500;
     }
 
-    .badge-cancelled {
+    .badge-cancalled {
       background: #f8d7da;
       color: #58151c;
       padding: 4px 12px;
@@ -137,15 +137,29 @@
       background: #f8f9fa;
       color: #1a1a2e;
     }
+
+        .italic {
+  font-style: italic;
+  font-size: 14px;
+  margin-left: 8px;
+}
+
   </style>
 </head>
 <body>
 
 <!-- Navbar -->
 <nav class="navbar d-flex align-items-center justify-content-between">
-  <span class="navbar-brand">❄️ CoolBreeze AC</span>
+  <span class="navbar-brand">
+    🌀 AroCode
+    <span class="italic">
+     [ Advanced Responsive Operations & Cognitive Digital Entity ]
+    </span>
+  </span>
+
   <div class="d-flex align-items-center">
     <span class="navbar-text">Hi, {{ request.user.first_name }}</span>
+
     <form method="POST" action="{% url 'logout' %}" style="display:inline;">
       {% csrf_token %}
       <button type="submit" class="logout-btn">Logout</button>

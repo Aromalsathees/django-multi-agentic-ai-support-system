@@ -1,11 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import User
+from account.models import CustomUser
 from orders.models import Order
 
 
 
 class Conversation(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="conversations")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="conversations")
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="conversations")
     created_at = models.DateTimeField(auto_now_add=True)
 

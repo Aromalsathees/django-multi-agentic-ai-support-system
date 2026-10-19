@@ -3,7 +3,7 @@ import json
 from django.http import JsonResponse, StreamingHttpResponse
 import time
 
-from .agents import run_support_agent
+from .langchain_agents import run_support_agent
 from .event_queue import publish, subscribe, unsubscribe
 from .models import Conversation, Message
 

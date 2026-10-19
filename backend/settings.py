@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
-from decouple import config, Csv
 from decouple import config
 from pathlib import Path
 
@@ -22,10 +21,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
 
 DEBUG = config("DEBUG", default=False, cast=bool)
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
 ALLOWED_HOSTS = []
@@ -85,7 +83,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": config("DB_NAME"),
         "USER": config("DB_USER"),
         "PASSWORD": config("DB_PASSWORD"),
@@ -131,10 +129,15 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-LOGIN_REDIRECT_URL = '/orders/'
-LOGOUT_REDIRECT_URL = '/login/'
-LOGIN_URL = '/login/'
+# 2. Additional directories where Django will look for static files during development
+STATICFILES_DIRS = [
+    BASE_DIR / 'backend/static',  # Points to a top-level "static" folder in your project root
+]
+
+# 3. The absolute path to the directory where collectstatic will gather files for production
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
-ANTHROPIC_API_KEY = config("ANTHROPIC_API_KEY")
-ANTHROPIC_MODEL = config("ANTHROPIC_MODEL")
+
+GEMINI_API_KEY = config("GEMINI_API_KEY")
+GEMINI_MODEL = config("GEMINI_MODEL")

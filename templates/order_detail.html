@@ -227,14 +227,27 @@
       border-radius: 10px 0 10px 10px;
       margin-left: auto;
     }
+
+    .italic {
+  font-style: italic;
+  font-size: 14px;
+  margin-left: 8px;
+}
   </style>
 </head>
 <body>
 
 <nav class="navbar d-flex align-items-center justify-content-between">
-  <span class="navbar-brand">❄️ CoolBreeze AC</span>
+  <span class="navbar-brand">
+    🌀 AroCode
+    <span class="italic">
+     [ Advanced Responsive Operations & Cognitive Digital Entity ]
+    </span>
+  </span>
+
   <div class="d-flex align-items-center">
     <span class="navbar-text">Hi, {{ request.user.first_name }}</span>
+
     <form method="POST" action="{% url 'logout' %}" style="display:inline;">
       {% csrf_token %}
       <button type="submit" class="logout-btn">Logout</button>
@@ -344,7 +357,7 @@
              {% endfor %}
             {% else %}
             <div class="agent-message p-2 px-3" style="font-size: 13px; max-width: 85%;">
-              Hi {{ request.user.first_name }}, I'm Maya, How can I help you with your order today?
+              Hi {{ request.user.first_name }}, I'm AroCode, How can I help you with your order today?
             </div>
             {% endif %}
           </div>

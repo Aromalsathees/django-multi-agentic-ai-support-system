@@ -12,7 +12,7 @@ class Product(models.Model):
 class Order(models.Model):
 
     STATUC_CHOICES = [
-        ("pending" , "Pening"),
+        ("pending" , "pending"),
         ("dispatched" , "Dispatched"),
         ("delivered" , "Delivered"),
         ("cancalled" , "Cancelled"),

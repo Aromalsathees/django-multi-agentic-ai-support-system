@@ -9,3 +9,4 @@ urlpatterns = [
 
     path('dashboard/stream/<int:conversation_id>/', views.conversation_stream, name="conversation_stream"),
 ]
+

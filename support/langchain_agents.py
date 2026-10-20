@@ -21,13 +21,42 @@ support_agent = create_agent(
 # The agent is ready now 
 
 def run_support_agent(user_message, conversation_id, order_id, user_id):
-    config = {"configurable": {"thread_id": str(conversation_id)}}
+    config = {
+        "configurable": {
+            "thread_id": str(conversation_id)
+        }
+    }
 
-    contextual_message = f"[Context: This Conversation is about Order #{order_id}, user: {user_id}]"
+    contextual_message = (
+        f"[Context: Order #{order_id}, User ID: {user_id}]\n"
+        f"Customer message: {user_message}"
+    )
 
     result = support_agent.invoke(
-        {"message": [{"role":"user", "content": contextual_message}]}, 
+        {
+            "messages": [
+                {
+                    "role": "user",
+                    "content": contextual_message
+                }
+            ]
+        },
         config=config
     )
 
-    print('result ==> ', result["messages"][-1].content)
+    reply = result["messages"][-1].content
+    print("result ==>", reply)
+    return reply
+# def run_support_agent(user_message, conversation_id, order_id, user_id):
+#     config = {"configurable": {"thread_id": str(conversation_id)}}
+
+#     contextual_message = f"[Context: This Conversation is about Order #{order_id}, user: {user_id}]"
+
+#     result = support_agent.invoke(
+#         {"message": [{"role":"user", "content": contextual_message}]}, 
+#         config=config
+#     )
+    
+#     reply = result["messages"][-1].content
+#     print('result ==>', result)
+

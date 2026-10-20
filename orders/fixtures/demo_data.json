@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
       "username": "aromal",
-      "email": "aromalsatheesh802003@gmail.com",
+      "email": "aromalsatheesh@gmail.com",
       "first_name": "Admin",
       "last_name": "",
       "is_staff": true,

@@ -3,461 +3,1184 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Order #{{ order.id }} — CoolBreeze AC</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <title>Order #{{ order.id }} | AroCode AI</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+
   <style>
+    :root {
+      --bg: #0b0c10;
+      --surface: #12141b;
+      --surface-2: #191c26;
+      --border: #282b38;
+      --text: #f4f5fa;
+      --muted: #9298ac;
+      --purple: #a78bfa;
+      --cyan: #67e8f9;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-      background: #f0f4f8;
-      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      min-height: 100vh;
     }
 
-    .navbar {
-      background: #1a1a2e;
-      padding: 14px 24px;
+    a { text-decoration: none; }
+
+    .topbar {
+      min-height: 76px;
+      padding: 0 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      background: rgba(18,20,27,.94);
+      border-bottom: 1px solid var(--border);
     }
 
-    .navbar-brand {
-      color: #fff;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+    }
+
+    .brand-symbol {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #8b5cf6, #4f46e5);
+      color: white;
+      font-size: 23px;
+      box-shadow: 0 0 28px #8b5cf625;
+    }
+
+    .brand-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 19px;
       font-weight: 700;
-      font-size: 16px;
+      letter-spacing: -.5px;
     }
 
-    .navbar-text {
-      color: rgba(255,255,255,0.7);
-      font-size: 13px;
+    .brand-caption {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      margin-top: 2px;
     }
+
+    .account-area {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .user-avatar {
+      height: 37px;
+      width: 37px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #29223d;
+      border: 1px solid #57428c;
+      color: #d8caff;
+      font-weight: 700;
+    }
+
+    .user-name { font-size: 12px; font-weight: 600; }
+    .user-role { color: var(--muted); font-size: 11px; }
 
     .logout-btn {
-      color: rgba(255,255,255,0.7);
-      font-size: 13px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      margin-left: 16px;
-      padding: 0;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      color: #c2c6d4;
+      background: transparent;
+      padding: 9px 13px;
+      font-size: 12px;
+      transition: .2s;
     }
 
     .logout-btn:hover {
-      color: #fff;
+      background: #29202b;
+      color: white;
+      border-color: #694c71;
+    }
+
+    .page {
+      width: min(1400px, 92%);
+      margin: 0 auto;
+      padding: 32px 0 55px;
     }
 
     .back-link {
-      font-size: 13px;
-      color: #6c757d;
-      text-decoration: none;
-      display: inline-block;
-      margin: 24px 0 16px;
+      display: inline-flex;
+      gap: 9px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 27px;
+      transition: .2s;
     }
 
-    .back-link:hover {
-      color: #1a1a2e;
-    }
+    .back-link:hover { color: var(--cyan); }
 
-    .detail-card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 28px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      margin-bottom: 16px;
-    }
-
-    .detail-card h6 {
+    .eyebrow {
+      color: var(--purple);
+      font-size: 10px;
       font-weight: 700;
-      color: #1a1a2e;
-      margin: 0 0 20px;
-      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 9px;
     }
 
-    .detail-row {
-      display: flex;
-      padding: 10px 0;
-      border-bottom: 1px solid #f1f3f5;
+    .page-heading {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(25px, 4vw, 35px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .page-subtitle {
+      color: var(--muted);
       font-size: 13px;
+      margin-top: 9px;
     }
 
-    .detail-row:last-child {
-      border-bottom: none;
+    .order-reference {
+      padding: 17px 20px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      min-width: 190px;
     }
 
-    .detail-label {
-      color: #6c757d;
-      width: 160px;
+    .ref-label {
+      color: var(--muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+    }
+
+    .ref-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 23px;
+      font-weight: 700;
+      margin-top: 4px;
+      overflow-wrap: anywhere;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(320px, .9fr);
+      gap: 22px;
+      margin-top: 30px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 19px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      min-width: 0;
+    }
+
+    .panel-heading {
+      padding: 21px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .panel-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .panel-icon {
+      width: 37px;
+      height: 37px;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      background: #8b5cf61a;
+      border: 1px solid #8b5cf638;
+      color: var(--purple);
+      font-size: 17px;
       flex-shrink: 0;
     }
 
-    .detail-value {
-      color: #1a1a2e;
-      font-weight: 500;
+    .order-hero {
+      padding: 25px 24px;
+      display: flex;
+      align-items: center;
+      gap: 17px;
+      background:
+        radial-gradient(ellipse at 0% 0%, #8b5cf616, transparent 65%),
+        var(--surface);
+      border-bottom: 1px solid var(--border);
     }
 
-    .badge-pending {
-      background: #cfe2ff;
-      color: #084298;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 500;
+    .product-icon {
+      width: 63px;
+      height: 63px;
+      border-radius: 17px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      background: linear-gradient(145deg, #27213c, #191a29);
+      border: 1px solid #49396e;
+      color: #c4b5fd;
+      font-size: 28px;
     }
 
-    .badge-dispatched {
-      background: #fff3cd;
-      color: #856404;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 500;
+    .product-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 19px;
+      font-weight: 600;
+      overflow-wrap: anywhere;
     }
 
-    .badge-delivered {
-      background: #d1e7dd;
-      color: #0a3622;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 500;
+    .product-meta {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 5px;
     }
 
-    .badge-cancelled {
-      background: #f8d7da;
-      color: #58151c;
-      padding: 4px 12px;
-      border-radius: 20px;
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 11px;
+      border-radius: 8px;
+      background: #27223a;
+      color: #d2c5ff;
+      border: 1px solid #4a3a6a;
       font-size: 11px;
-      font-weight: 500;
+      font-weight: 700;
+      white-space: normal;
     }
+
+    .status-pill::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    .status-pending, .status-pill.badge-pending {
+      color: #93c5fd;
+      background: #17263c;
+      border-color: #29476c;
+    }
+
+    .status-dispatched, .status-pill.badge-dispatched {
+      color: #fcd34d;
+      background: #332b19;
+      border-color: #655022;
+    }
+
+    .status-delivered, .status-pill.badge-delivered {
+      color: #6ee7b7;
+      background: #142c25;
+      border-color: #275843;
+    }
+
+    .status-cancelled, .status-pill.badge-cancelled {
+      color: #fda4af;
+      background: #351c25;
+      border-color: #6e3442;
+    }
+
+    .info-list { padding: 8px 24px 19px; }
+
+    .info-row {
+      display: grid;
+      grid-template-columns: minmax(120px, .8fr) minmax(0, 1.2fr);
+      gap: 15px;
+      padding: 17px 0;
+      border-bottom: 1px solid #242632;
+      align-items: start;
+    }
+
+    .info-row:last-child { border-bottom: 0; }
+
+    .info-label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .info-value {
+      color: #ececf5;
+      font-size: 13px;
+      font-weight: 500;
+      overflow-wrap: anywhere;
+    }
+
+    .amount-panel {
+      padding: 22px 24px;
+      background: linear-gradient(120deg, #1c1830, #151722);
+      border-top: 1px solid #33294c;
+    }
+
+    .amount-label {
+      color: #b8b0d1;
+      font-size: 11px;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+    }
+
+    .amount-value {
+      color: #ddd6fe;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 31px;
+      font-weight: 700;
+      margin-top: 5px;
+    }
+
+    .refund-list { padding: 8px 24px 17px; }
 
     .refund-item {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid #f1f3f5;
-      font-size: 13px;
+      gap: 15px;
+      align-items: flex-start;
+      padding: 16px 0;
+      border-bottom: 1px solid #242632;
     }
 
-    .refund-item:last-child {
-      border-bottom: none;
-    }
+    .refund-item:last-child { border-bottom: 0; }
 
     .refund-reason {
-      color: #495057;
-    }
-
-    .badge-approved {
-      background: #d1e7dd;
-      color: #0a3622;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 500;
-    }
-
-    .badge-denied {
-      background: #f8d7da;
-      color: #58151c;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 500;
-    }
-
-    .help-card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 28px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      text-align: center;
-    }
-
-    .help-card h6 {
-      font-weight: 700;
-      color: #1a1a2e;
-      margin: 16px 0 8px;
-    }
-
-    .help-card p {
+      color: #e4e5ef;
       font-size: 13px;
-      color: #6c757d;
-      margin: 0 0 20px;
+      overflow-wrap: anywhere;
     }
 
-    .btn-help {
-      background: #1a1a2e;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 12px 24px;
-      font-size: 14px;
-      font-weight: 500;
-      text-decoration: none;
-      display: inline-block;
+    .refund-label {
+      color: var(--muted);
+      font-size: 10px;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+    }
+
+    .refund-status {
+      padding: 6px 9px;
+      border-radius: 7px;
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .refund-status.badge-approved {
+      color: #6ee7b7;
+      background: #142c25;
+      border: 1px solid #275843;
+    }
+
+    .refund-status.badge-denied {
+      color: #fda4af;
+      background: #351c25;
+      border: 1px solid #6e3442;
+    }
+
+    /* AI support */
+    .support-panel { position: sticky; top: 18px; }
+
+    .support-heading {
+      padding: 21px;
+      background: radial-gradient(ellipse at top left, #8b5cf61d, transparent 80%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ai-identity {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ai-avatar {
+      width: 45px;
+      height: 45px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      color: #e9ddff;
+      font-size: 22px;
+      background: linear-gradient(140deg, #7c3aed, #4338ca);
+      box-shadow: 0 0 25px #8b5cf622;
+    }
+
+    .ai-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .online-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #6ee7b7;
+      font-size: 10px;
+      margin-top: 5px;
+    }
+
+    .online-dot {
+      height: 6px;
+      width: 6px;
+      border-radius: 50%;
+      background: #34d399;
+    }
+
+    .ai-tag {
+      font-size: 9px;
+      letter-spacing: .8px;
+      color: #c4b5fd;
+      border: 1px solid #49396e;
+      background: #241b39;
+      border-radius: 6px;
+      padding: 6px 8px;
+      white-space: nowrap;
+    }
+
+    .help-intro {
+      padding: 30px 23px;
+    }
+
+    .intro-art {
+      width: 72px;
+      height: 72px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 22px;
+      border-radius: 23px;
+      font-size: 34px;
+      color: #c4b5fd;
+      background: radial-gradient(circle at 35% 20%, #6d45a4, #242039 70%);
+      border: 1px solid #49396e;
+    }
+
+    .intro-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .intro-description {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+      margin: 11px 0 23px;
+    }
+
+    .topic-list {
+      display: grid;
+      gap: 9px;
+      margin-bottom: 24px;
+    }
+
+    .topic-item {
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      color: #c9cada;
+      font-size: 12px;
+      background: #161821;
+    }
+
+    .topic-item i { color: var(--purple); font-size: 15px; }
+
+    .start-chat-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
       width: 100%;
+      padding: 14px 18px;
+      border: 0;
+      border-radius: 11px;
+      background: linear-gradient(100deg, #7c3aed, #5b4be0);
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      transition: .2s;
+      box-shadow: 0 8px 25px #6d28d91c;
     }
 
-    .btn-help:hover {
-      background: #2d2d4e;
-      color: #fff;
+    .start-chat-btn:hover {
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px #6d28d933;
     }
 
-    #chat-box{
-      height: 500px;
+    #chat-box {
+      display: none;
+      flex-direction: column;
+      height: min(640px, 72vh);
+      min-height: 430px;
+    }
+
+    #chat-box.visible { display: flex; }
+
+    .chat-toolbar {
+      padding: 13px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .chat-toolbar-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #e2e2f0;
+    }
+
+    .icon-btn {
+      border: 1px solid var(--border);
+      background: #1a1c27;
+      color: var(--muted);
+      border-radius: 8px;
+      width: 31px;
+      height: 31px;
+    }
+
+    .icon-btn:hover { color: white; }
+
+    .chat-messages {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 17px;
       display: flex;
       flex-direction: column;
-      opacity: 0;
+      gap: 12px;
+      scrollbar-color: #363348 transparent;
+      scrollbar-width: thin;
     }
 
-    #chat-box.visible{
-      opacity: 1;
+    .message-meta {
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 5px;
     }
 
-    .chat-messages{
+    .message-wrap { max-width: 91%; }
+
+    .message-wrap.customer-wrap { align-self: flex-end; }
+    .message-wrap.agent-wrap { align-self: flex-start; }
+
+    .customer-message, .agent-message {
+      padding: 12px 14px;
+      font-size: 12px;
+      line-height: 1.75;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .customer-message {
+      color: white;
+      background: linear-gradient(135deg, #7043ce, #5145b8);
+      border-radius: 13px 13px 3px 13px;
+    }
+
+    .agent-message {
+      color: #dfe0ec;
+      background: #20222e;
+      border: 1px solid #2b2e3b;
+      border-radius: 3px 13px 13px 13px;
+    }
+
+    .typing-indicator {
+      color: var(--muted);
+      font-size: 11px;
+      padding: 7px 0;
+    }
+
+    .typing-indicator span {
+      display: inline-block;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: .3; }
+      50% { opacity: 1; }
+    }
+
+    .chat-footer {
+      padding: 13px;
+      border-top: 1px solid var(--border);
+      background: #101119;
+    }
+
+    .chat-form {
+      display: flex;
+      gap: 8px;
+      padding: 5px;
+      border-radius: 12px;
+      border: 1px solid #363044;
+      background: #191a25;
+    }
+
+    .chat-input {
       flex: 1;
-      overflow-y: auto;
+      min-width: 0;
+      border: 0;
+      outline: none;
+      background: transparent;
+      color: white;
+      padding: 9px 8px;
+      font-size: 12px;
     }
 
-    .agent-message{
-      background: #f3f4f6;
-      border-radius: 0 10px 10px 10px;
-      white-space: pre-line;
+    .chat-input::placeholder { color: #777d90; }
+    .chat-input:focus { box-shadow: none; }
+
+    .send-btn {
+      width: 39px;
+      height: 39px;
+      flex-shrink: 0;
+      border: 0;
+      border-radius: 9px;
+      background: #7651d5;
+      color: white;
+      font-size: 17px;
     }
 
-    .customer-message{
-      background-color: #1a1a2e;
-      color: #fff;
-      border-radius: 10px 0 10px 10px;
-      margin-left: auto;
+    .send-btn:hover { background: #8b67ed; }
+    .send-btn:disabled { opacity: .5; }
+
+    .chat-note {
+      color: #71778a;
+      text-align: center;
+      font-size: 9px;
+      margin-top: 10px;
     }
 
-    .italic {
-  font-style: italic;
-  font-size: 14px;
-  margin-left: 8px;
-}
+    .footer-note {
+      text-align: center;
+      color: #666b7c;
+      font-size: 10px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .support-panel { position: static; }
+      #chat-box { height: 580px; }
+    }
+
+    @media (max-width: 575px) {
+      .topbar { padding: 14px 4%; min-height: 68px; }
+      .brand-caption { display: none; }
+      .brand-name { font-size: 17px; }
+      .brand-symbol { width: 37px; height: 37px; }
+      .user-name, .user-role { display: none; }
+      .account-area { gap: 9px; }
+      .logout-btn { padding: 8px 10px; }
+      .page { width: 92%; padding-top: 24px; }
+      .page-heading { font-size: 27px; }
+      .heading-row { align-items: flex-start !important; flex-direction: column; }
+      .order-reference { width: 100%; }
+      .info-list { padding-left: 17px; padding-right: 17px; }
+      .info-row { grid-template-columns: 110px minmax(0, 1fr); gap: 10px; }
+      .panel-heading { padding: 17px; }
+      .order-hero { padding: 19px 17px; gap: 12px; }
+      .product-icon { width: 49px; height: 49px; font-size: 23px; }
+      .product-name { font-size: 16px; }
+      .amount-panel { padding: 19px; }
+      .refund-list { padding-left: 17px; padding-right: 17px; }
+      #chat-box { height: 70vh; min-height: 420px; }
+      .ai-tag { font-size: 8px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
   </style>
 </head>
+
 <body>
 
-<nav class="navbar d-flex align-items-center justify-content-between">
-  <span class="navbar-brand">
-    🌀 AroCode
-    <span class="italic">
-     [ Advanced Responsive Operations & Cognitive Digital Entity ]
+<header class="topbar">
+  <a href="{% url 'orders_list' %}" class="brand">
+    <span class="brand-symbol"><i class="bi bi-cpu"></i></span>
+    <span>
+      <span class="brand-name">AroCode<span style="color:#a78bfa">.</span></span>
+      <span class="brand-caption">AI operations intelligence</span>
     </span>
-  </span>
+  </a>
 
-  <div class="d-flex align-items-center">
-    <span class="navbar-text">Hi, {{ request.user.first_name }}</span>
+  <div class="account-area">
+    <div class="user-avatar">
+      {{ request.user.first_name|default:request.user.username|slice:":1"|upper }}
+    </div>
 
-    <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+    <div>
+      <div class="user-name">{{ request.user.first_name|default:request.user.username }}</div>
+      <div class="user-role">Customer account</div>
+    </div>
+
+    <form method="POST" action="{% url 'logout' %}">
       {% csrf_token %}
-      <button type="submit" class="logout-btn">Logout</button>
+      <button type="submit" class="logout-btn">
+        <i class="bi bi-box-arrow-right me-1"></i> Logout
+      </button>
     </form>
   </div>
-</nav>
+</header>
 
-<div class="container">
+<main class="page">
 
-  <a href="{% url 'orders_list' %}" class="back-link">← Back to Orders</a>
+  <a href="{% url 'orders_list' %}" class="back-link">
+    <i class="bi bi-arrow-left"></i> All orders
+  </a>
 
-  <div class="row g-3">
+  <div class="heading-row d-flex align-items-end justify-content-between gap-4">
+    <div>
+      <div class="eyebrow">Customer workspace / Order overview</div>
+      <h1 class="page-heading">Your order, in focus.</h1>
+      <p class="page-subtitle">
+        Review your order information and get assistance from AroCode AI.
+      </p>
+    </div>
 
-    <div class="col-md-8">
-      <div class="detail-card">
-        <h6>Order #{{ order.id }} — {{ order.product_name }}</h6>
+    <div class="order-reference">
+      <div class="ref-label">Reference number</div>
+      <div class="ref-value">#{{ order.id }}</div>
+    </div>
+  </div>
 
-        <div class="detail-row">
-          <span class="detail-label">Status</span>
-          <span class="detail-value">
-            <span class="badge-{{ order.status }}">
-              {{ order.get_status_display }}
-            </span>
+  <div class="main-grid">
+
+    <!-- LEFT: ORDER INFORMATION -->
+    <section>
+
+      <div class="panel">
+        <div class="panel-heading">
+          <div class="d-flex align-items-center gap-3">
+            <span class="panel-icon"><i class="bi bi-box-seam"></i></span>
+            <div>
+              <h2 class="panel-title">Order information</h2>
+              <div class="product-meta">Your purchase details</div>
+            </div>
+          </div>
+
+          <span class="status-pill status-{{ order.status }}">
+            {{ order.get_status_display }}
           </span>
         </div>
 
-        <div class="detail-row">
-          <span class="detail-label">Amount</span>
-          <span class="detail-value">₹{{ order.amount }}</span>
+        <div class="order-hero">
+          <div class="product-icon"><i class="bi bi-snow"></i></div>
+          <div class="flex-grow-1">
+            <div class="product-name">{{ order.product_name }}</div>
+            <div class="product-meta">
+              <i class="bi bi-calendar3 me-1"></i>
+              Placed {{ order.created_at|date:"d M Y, h:i A" }}
+            </div>
+          </div>
         </div>
 
-        <div class="detail-row">
-          <span class="detail-label">Ordered on</span>
-          <span class="detail-value">{{ order.created_at|date:"d M Y, h:i A" }}</span>
+        <div class="info-list">
+
+          <div class="info-row">
+            <span class="info-label">Order ID</span>
+            <span class="info-value">#{{ order.id }}</span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">Current status</span>
+            <span class="info-value">{{ order.get_status_display }}</span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">Order date</span>
+            <span class="info-value">{{ order.created_at|date:"d M Y, h:i A" }}</span>
+          </div>
+
+          {% if order.carrier %}
+          <div class="info-row">
+            <span class="info-label">Delivery partner</span>
+            <span class="info-value">{{ order.carrier }}</span>
+          </div>
+          {% endif %}
+
+          {% if order.tracking_number %}
+          <div class="info-row">
+            <span class="info-label">Tracking number</span>
+            <span class="info-value">{{ order.tracking_number }}</span>
+          </div>
+          {% endif %}
+
+          {% if order.delivery %}
+          <div class="info-row">
+            <span class="info-label">Delivery address</span>
+            <span class="info-value">{{ order.delivery }}</span>
+          </div>
+          {% endif %}
+
         </div>
 
-        {% if order.carrier %}
-        <div class="detail-row">
-          <span class="detail-label">Carrier</span>
-          <span class="detail-value">{{ order.carrier }}</span>
+        <div class="amount-panel">
+          <div class="amount-label">
+            <i class="bi bi-wallet2 me-2"></i>Order total
+          </div>
+          <div class="amount-value">₹{{ order.amount }}</div>
         </div>
-        {% endif %}
-
-        {% if order.tracking_number %}
-        <div class="detail-row">
-          <span class="detail-label">Tracking Number</span>
-          <span class="detail-value">{{ order.tracking_number }}</span>
-        </div>
-        {% endif %}
-
-        {% if order.delivery %}
-        <div class="detail-row">
-          <span class="detail-label">Delivery Address</span>
-          <span class="detail-value">{{ order.delivery }}</span>
-        </div>
-        {% endif %}
-
       </div>
 
       {% if refunds %}
-      <div class="detail-card">
-        <h6>Refund History</h6>
-        {% for refund in refunds %}
-        <div class="refund-item">
-          <span class="refund-reason">{{ refund.reason }}</span>
-          <span class="badge-{{ refund.status }}">
-            {{ refund.get_status_display }}
-          </span>
+      <div class="panel">
+        <div class="panel-heading">
+          <div class="d-flex align-items-center gap-3">
+            <span class="panel-icon"><i class="bi bi-arrow-counterclockwise"></i></span>
+            <div>
+              <h2 class="panel-title">Refund activity</h2>
+              <div class="product-meta">Previous refund requests</div>
+            </div>
+          </div>
+          <span class="ai-tag">{{ refunds|length }} REQUEST{{ refunds|length|pluralize }}</span>
         </div>
-        {% endfor %}
+
+        <div class="refund-list">
+          {% for refund in refunds %}
+          <div class="refund-item">
+            <div>
+              <div class="refund-label">Reason</div>
+              <div class="refund-reason">{{ refund.reason }}</div>
+            </div>
+
+            <span class="refund-status badge-{{ refund.status }}">
+              {{ refund.get_status_display }}
+            </span>
+          </div>
+          {% endfor %}
+        </div>
       </div>
       {% endif %}
 
-    </div>
+    </section>
 
-    <div class="col-md-4">
-      <!-- Help card - visible by default -->
-      <div class="help-card" id="help-card">
-        <div style="font-size:32px;">💬</div>
-        <h6>Need help with this order?</h6>
-        <p>Our AI support agent can help you with delivery issues, refunds, or any other concerns.</p>
-        <button onclick="showChat()" class="btn-help">Get Help</button>
-      </div>
+    <!-- RIGHT: AI SUPPORT -->
+    <aside class="support-panel">
 
-      <!-- Chat box - hidden by default -->
-       <div id="chat-box" class="card">
-        <!-- Header -->
-         <div class="card-header d-flex align-items-center gap-2">
-          <div style="width: 8px;height: 8px; border-radius: 50%; background-color: green;"></div>
-          <span class="fw-semibold" style="font-size: 13px;">Support Agent</span>
-         </div>
+      <div class="panel" id="help-card">
 
-         <!-- Chat area -->
-          <div id="chat-messages" class="chat-messages p-3 d-flex flex-column gap-2">
-            {% if conversation %}
-            <!-- print the previous messages -->
-             {% for msg in previous_messages %}
-              {% if msg.role == 'user' %}
-                <div class="customer-message p-2 px-3" style="font-size: 13px;max-width: 85%;">
-                  {{ msg.content }}
-                </div>
-              {% else %}
-                <div class="agent-message p-2 px-3" style="font-size: 13px;max-width: 85%;">
-                  {{ msg.content }}
-                </div>
-              {% endif %}
-             {% endfor %}
-            {% else %}
-            <div class="agent-message p-2 px-3" style="font-size: 13px; max-width: 85%;">
-              Hi {{ request.user.first_name }}, I'm AroCode, How can I help you with your order today?
+        <div class="support-heading">
+          <div class="ai-identity">
+            <div class="ai-avatar"><i class="bi bi-stars"></i></div>
+            <div class="flex-grow-1">
+              <div class="ai-name">AroCode AI</div>
+              <div class="online-indicator">
+                <span class="online-dot"></span>
+                Customer support assistant
+              </div>
             </div>
-            {% endif %}
+            <span class="ai-tag">AI POWERED</span>
+          </div>
+        </div>
+
+        <div class="help-intro">
+          <div class="intro-art"><i class="bi bi-chat-square-heart"></i></div>
+
+          <h2 class="intro-title">How can we make things easier?</h2>
+
+          <p class="intro-description">
+            Have a question about your order? Start a conversation with
+            AroCode AI for help with common order and delivery concerns.
+          </p>
+
+          <div class="topic-list">
+            <div class="topic-item">
+              <i class="bi bi-truck"></i>
+              Delivery and tracking questions
+            </div>
+            <div class="topic-item">
+              <i class="bi bi-arrow-repeat"></i>
+              Refund-related concerns
+            </div>
+            <div class="topic-item">
+              <i class="bi bi-chat-dots"></i>
+              General order assistance
+            </div>
           </div>
 
-          <!-- Chat footer -->
-           <div class="card-footer d-flex">
-            <input type="text" id="chat-input" class="form-control form-control-sm" placeholder="Type your message...">
-            <button class="btn btn-dark btn-sm px-3" onclick="sendMessage()">Send</button>
-           </div>
-       </div>
-    </div>
+          <button type="button" onclick="showChat()" class="start-chat-btn">
+            <i class="bi bi-stars"></i>
+            Start a conversation
+            <i class="bi bi-arrow-up-right ms-auto"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="panel" id="chat-box">
+
+        <div class="support-heading">
+          <div class="ai-identity">
+            <div class="ai-avatar"><i class="bi bi-stars"></i></div>
+            <div class="flex-grow-1">
+              <div class="ai-name">AroCode AI</div>
+              <div class="online-indicator">
+                <span class="online-dot"></span>
+                Assistant
+              </div>
+            </div>
+            <button type="button" class="icon-btn" onclick="closeChat()" aria-label="Close chat">
+              <i class="bi bi-chevron-down"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="chat-toolbar">
+          <span class="chat-toolbar-label">
+            <i class="bi bi-shield-check me-2" style="color:#a78bfa"></i>
+            Order #{{ order.id }} support
+          </span>
+          <span class="ai-tag">LIVE CHAT</span>
+        </div>
+
+        <div id="chat-messages" class="chat-messages" aria-live="polite">
+          {% if conversation %}
+            {% for msg in previous_messages %}
+              {% if msg.role == 'user' %}
+                <div class="message-wrap customer-wrap">
+                  <div class="message-meta">You</div>
+                  <div class="customer-message">{{ msg.content }}</div>
+                </div>
+              {% else %}
+                <div class="message-wrap agent-wrap">
+                  <div class="message-meta">AroCode AI</div>
+                  <div class="agent-message">{{ msg.content }}</div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            <div class="message-wrap agent-wrap">
+              <div class="message-meta">AroCode AI · Welcome</div>
+              <div class="agent-message">Hi {{ request.user.first_name|default:request.user.username }}! 👋
+
+I'm here to help with order #{{ order.id }}.
+
+What would you like to know about your order today?</div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="chat-footer">
+          <form class="chat-form" id="chat-form">
+            <input
+              type="text"
+              id="chat-input"
+              class="chat-input"
+              placeholder="Ask about your order..."
+              autocomplete="off"
+              aria-label="Your message"
+              maxlength="4000"
+              required
+            />
+            <button type="submit" id="send-btn" class="send-btn" aria-label="Send message">
+              <i class="bi bi-arrow-up"></i>
+            </button>
+          </form>
+          <div class="chat-note">
+            <i class="bi bi-stars me-1"></i>
+            Powered by AroCode AI · Check important details before acting on advice.
+          </div>
+        </div>
+
+      </div>
+
+    </aside>
 
   </div>
 
-</div>
+  <div class="footer-note">
+    AROCODE AI · ADVANCED RESPONSIVE OPERATIONS &amp; COGNITIVE DIGITAL ENTITY
+  </div>
+
+</main>
 
 <script>
+  const helpCard = document.getElementById("help-card");
+  const chatBox = document.getElementById("chat-box");
+  const messages = document.getElementById("chat-messages");
+  const input = document.getElementById("chat-input");
+  const sendBtn = document.getElementById("send-btn");
+  const chatForm = document.getElementById("chat-form");
 
-  function showTyping(){
-    const messages = document.getElementById("chat-messages");
-    messages.insertAdjacentHTML("beforeend", `
-    <div id="typing-indicator" class="agent-message p-2" style="font-size:13px;max-width:85%;">
-      Typing...
-    </div>
-    `);
+  let isSending = false;
+  let typingElement = null;
+
+  function showChat() {
+    helpCard.style.display = "none";
+    chatBox.classList.add("visible");
+    scrollToBottom();
+    input.focus();
+  }
+
+  function closeChat() {
+    chatBox.classList.remove("visible");
+    helpCard.style.display = "block";
+  }
+
+  function scrollToBottom() {
     messages.scrollTop = messages.scrollHeight;
   }
 
-  function hideTyping(){
-    document.getElementById("typing-indicator").remove();
+  function appendMessage(text, type) {
+    const isCustomer = type === "customer";
+
+    const wrap = document.createElement("div");
+    wrap.className = "message-wrap " +
+      (isCustomer ? "customer-wrap" : "agent-wrap");
+
+    const meta = document.createElement("div");
+    meta.className = "message-meta";
+    meta.textContent = isCustomer ? "You" : "AroCode AI";
+
+    const bubble = document.createElement("div");
+    bubble.className = isCustomer ? "customer-message" : "agent-message";
+
+    // textContent prevents server replies from being interpreted as HTML.
+    bubble.textContent = text;
+
+    wrap.appendChild(meta);
+    wrap.appendChild(bubble);
+    messages.appendChild(wrap);
+
+    scrollToBottom();
   }
 
-  function showChat(){
-    document.getElementById("help-card").style.display = "none";
+  function showTyping() {
+    if (typingElement) return;
 
-    const chatBox = document.getElementById("chat-box");
+    typingElement = document.createElement("div");
+    typingElement.className = "typing-indicator";
+    typingElement.textContent = "AroCode AI is thinking ";
+    
+    const dots = document.createElement("span");
+    dots.textContent = "•••";
+    typingElement.appendChild(dots);
 
-    chatBox.classList.add("visible")
+    messages.appendChild(typingElement);
+    scrollToBottom();
   }
 
-  function appendMessage(text, type){
-    const messages = document.getElementById("chat-messages");
-
-    const div = document.createElement("div");
-    div.classList.add(type === "customer" ? "customer-message" : "agent-message");
-    div.classList.add("p-2", "px-3");
-    div.style.fontSize = "13px";
-    div.style.maxWidth = "85%";
-    div.innerText = text;
-
-    messages.appendChild(div);
-    messages.scrollTop = messages.scrollHeight;
-  }
-
-  async function sendMessage(){
-    const input = document.getElementById("chat-input");
-    const message = input.value.trim();
-
-    // don't send empty message
-    if(!message) return;
-
-    appendMessage(message, "customer");
-
-    input.value = "";
-    input.disabled = true;
-
-    const typingTimeout = setTimeout(() => showTyping(), 1000); // show typing after 2 seconds
-
-    // send message to django view
-    try{
-      const response = await fetch("/support/chat/{{order.id}}/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": "{{ csrf_token }}"
-        },
-        body: JSON.stringify({message: message})
-      });
-
-      const data = await response.json()
-      hideTyping();
-      appendMessage(data.reply, "agent");
-      input.disabled = false;
-      input.focus();
-    }catch(error){
-      console.error("Error: ", error)
-      appendMessage("Sorry, something went wrong", "agent")
-      input.disabled = false;
-      input.focus();
-    } finally{
-      clearTimeout(typingTimeout);
-      hideTyping();
-      
+  function hideTyping() {
+    if (typingElement) {
+      typingElement.remove();
+      typingElement = null;
     }
   }
 
-    // send message on Enter key
-    document.getElementById("chat-input").addEventListener("keydown", function(e){
-      if(e.key === "Enter") sendMessage();
-    })
+  function getCsrfToken() {
+    const cookie = document.cookie
+      .split("; ")
+      .find(row => row.startsWith("csrftoken="));
+
+    if (cookie) {
+      return decodeURIComponent(cookie.split("=").slice(1).join("="));
+    }
+
+    // Fallback when the token is supplied through Django's template.
+    return "{{ csrf_token }}";
+  }
+
+  async function sendMessage() {
+    const message = input.value.trim();
+
+    if (!message || isSending) return;
+
+    showChat();
+    appendMessage(message, "customer");
+
+    input.value = "";
+    isSending = true;
+    input.disabled = true;
+    sendBtn.disabled = true;
+
+    const typingTimeout = setTimeout(showTyping, 500);
+
+    try {
+      const response = await fetch("/chat/{{ order.id }}/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCsrfToken()
+        },
+        body: JSON.stringify({ message: message })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "The support request failed.");
+      }
+
+      if (typeof data.reply !== "string") {
+        throw new Error("The server returned an invalid response.");
+      }
+
+      appendMessage(data.reply, "agent");
+
+    } catch (error) {
+      console.error("Chat error:", error);
+
+      appendMessage(
+        "Sorry, I couldn't process that message. Please try again.",
+        "agent"
+      );
+
+    } finally {
+      clearTimeout(typingTimeout);
+      hideTyping();
+
+      isSending = false;
+      input.disabled = false;
+      sendBtn.disabled = false;
+      input.focus();
+    }
+  }
+
+  chatForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    sendMessage();
+  });
+
+  scrollToBottom();
 </script>
+
 </body>
 </html>
+

@@ -19,18 +19,19 @@ def chat(request, order_id):
 
         if not user_message:
             return JsonResponse({"error": "Empty message"}, status=400)
-        
+        print(user_message)
         order = get_object_or_404(Order, id=order_id, user=request.user)
 
         conversation, created = Conversation.objects.get_or_create(user=request.user, order=order)
-
+        
         Message.objects.create(conversation=conversation, role="user", content=user_message)
 
         event = {"type": "user_message", "message": user_message, "name": request.user.first_name}
         publish(conversation.id, event)
-
+        print(event)
         # send user message and conversation to LLM
         reply = run_support_agent(user_message, conversation.id, order.id, request.user.id)
+        print(reply)
         # store the LLM reply
         Message.objects.create(conversation=conversation, role="assistant", content=reply)
         

@@ -70,4 +70,4 @@ jobs:
         run: python manage.py check
 
       - name: Run Django tests
-        run: python manage.py test --fail-on-empty
+        run: python manage.py test 

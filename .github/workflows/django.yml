@@ -10,10 +10,34 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: ci_test_db
+          POSTGRES_USER: ci_test_user
+          POSTGRES_PASSWORD: ci_test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci_test_user -d ci_test_db"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     env:
       SECRET_KEY: "ci-test-secret-key-not-for-production"
       DEBUG: "True"
       ALLOWED_HOSTS: "localhost,127.0.0.1,testserver"
+
+      DB_NAME: "ci_test_db"
+      DB_USER: "ci_test_user"
+      DB_PASSWORD: "ci_test_password"
+      DB_HOST: "localhost"
+      DB_PORT: "5432"
+
+      GEMINI_API_KEY: "ci-test-key"
+      GEMINI_MODEL: "gemini-2.5-flash"
 
     steps:
       - name: Checkout code
@@ -23,11 +47,24 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
+          cache: "pip"
 
-      - name: Install dependencies
+      - name: Install PostgreSQL client dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpq-dev
+
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Wait for PostgreSQL
+        run: |
+          for i in {1..30}; do
+            pg_isready -h localhost -p 5432 -U ci_test_user && break
+            sleep 2
+          done
 
       - name: Django system checks
         run: python manage.py check

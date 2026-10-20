@@ -13,6 +13,7 @@ jobs:
     env:
       SECRET_KEY: "ci-test-secret-key-not-for-production"
       DEBUG: "True"
+      ALLOWED_HOSTS: "localhost,127.0.0.1,testserver"
 
     steps:
       - name: Checkout code

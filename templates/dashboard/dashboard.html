@@ -1,0 +1,494 @@
+{% extends "dashboard/dashboard_base.html" %}
+
+{% block content %}
+
+<style>
+    .conversations-page {
+        padding: 8px 0;
+    }
+
+    .page-title {
+        font-size: 25px;
+        font-weight: 750;
+        color: #172033;
+        letter-spacing: -0.7px;
+    }
+
+    .page-subtitle {
+        color: #8490a5;
+        font-size: 13px;
+        margin-top: 5px;
+    }
+
+    .conversation-card {
+        background: #ffffff;
+        border: 1px solid #e9edf4;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 18px rgba(30, 41, 59, 0.035);
+    }
+
+    .conversation-toolbar {
+        padding: 22px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        border-bottom: 1px solid #edf0f5;
+    }
+
+    .toolbar-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #202b40;
+        margin: 0;
+    }
+
+    .toolbar-subtitle {
+        font-size: 12px;
+        color: #929caf;
+        margin-top: 5px;
+    }
+
+    .search-box {
+        width: 250px;
+        max-width: 100%;
+        padding: 10px 13px;
+        border: 1px solid #e5e9f0;
+        border-radius: 9px;
+        background: #f9fafc;
+        font-size: 12px;
+        outline: none;
+    }
+
+    .search-box:focus {
+        border-color: #7775f5;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(119, 117, 245, .10);
+    }
+
+    .conversation-table {
+        min-width: 1000px;
+        margin: 0;
+    }
+
+    .conversation-table thead th {
+        background: #f8f9fc;
+        color: #8993a6;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .8px;
+        padding: 16px 18px;
+        border-bottom: 1px solid #edf0f5;
+        white-space: nowrap;
+    }
+
+    .conversation-table tbody td {
+        padding: 17px 18px;
+        font-size: 12px;
+        color: #4b566b;
+        border-bottom: 1px solid #f0f2f6;
+        vertical-align: middle;
+    }
+
+    .conversation-table tbody tr {
+        transition: background .2s ease;
+    }
+
+    .conversation-table tbody tr:hover {
+        background: #fafbff;
+    }
+
+    .customer-info {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        min-width: 155px;
+    }
+
+    .customer-avatar {
+        width: 37px;
+        height: 37px;
+        border-radius: 11px;
+        background: #eeedff;
+        color: #625cf0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 800;
+        flex-shrink: 0;
+    }
+
+    .customer-name {
+        color: #202b40;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .customer-label {
+        font-size: 10px;
+        color: #9aa3b4;
+        margin-top: 3px;
+    }
+
+    .order-id {
+        font-weight: 700;
+        color: #5259cf;
+        white-space: nowrap;
+    }
+
+    .product-name {
+        color: #596579;
+        max-width: 160px;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 7px;
+        font-size: 10px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .status-badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    .status-pending {
+        background: #edf3ff;
+        color: #3972d8;
+    }
+
+    .status-dispatched {
+        background: #fff4df;
+        color: #b87a13;
+    }
+
+    .status-delivered {
+        background: #e6f8ef;
+        color: #23945b;
+    }
+
+    .status-cancelled {
+        background: #ffebed;
+        color: #d84c5c;
+    }
+
+    .agent-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 9px;
+        border-radius: 7px;
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+    .manager-yes {
+        background: #fff3df;
+        color: #a66b08;
+    }
+
+    .risk-yes {
+        background: #ffebed;
+        color: #d44757;
+    }
+
+    .not-involved {
+        color: #a5adbb;
+        font-size: 12px;
+    }
+
+    .date-text {
+        white-space: nowrap;
+        color: #8b95a7;
+        font-size: 11px;
+    }
+
+    .view-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 12px;
+        border: 1px solid #e4e6f5;
+        border-radius: 8px;
+        background: #fff;
+        color: #625cf0;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: 700;
+        white-space: nowrap;
+        transition: all .2s ease;
+    }
+
+    .view-btn:hover {
+        background: #625cf0;
+        color: white;
+        border-color: #625cf0;
+    }
+
+    .table-footer {
+        padding: 15px 24px;
+        background: #fff;
+        color: #9099aa;
+        font-size: 11px;
+    }
+
+    .empty-state {
+        padding: 55px 20px !important;
+        text-align: center;
+        color: #8c96a9 !important;
+    }
+
+    .empty-icon {
+        font-size: 30px;
+        margin-bottom: 12px;
+    }
+
+    @media (max-width: 768px) {
+        .page-title {
+            font-size: 21px;
+        }
+
+        .conversation-toolbar {
+            padding: 17px;
+        }
+
+        .search-box {
+            width: 100%;
+        }
+
+        .table-footer {
+            padding: 14px 17px;
+        }
+    }
+</style>
+
+<div class="conversations-page">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+        <div>
+            <h4 class="page-title mb-0">Conversations</h4>
+            <p class="page-subtitle mb-0">
+                Monitor customer interactions and AI agent activities.
+            </p>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <span style="font-size:11px; color:#8a94a7;">
+                <span style="color:#24a66a;">●</span>
+                Conversation management
+            </span>
+        </div>
+    </div>
+
+    <!-- Conversations Table -->
+    <div class="conversation-card">
+
+        <div class="conversation-toolbar">
+            <div>
+                <h6 class="toolbar-title">All Conversations</h6>
+                <p class="toolbar-subtitle mb-0">
+                    Customer orders, risk assessments and manager escalations
+                </p>
+            </div>
+
+            <input
+                type="text"
+                id="conversationSearch"
+                class="search-box"
+                placeholder="Search customer, order or product..."
+                aria-label="Search conversations"
+            >
+        </div>
+
+        <div class="table-responsive">
+            <table class="table conversation-table">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Order ID</th>
+                        <th>Product</th>
+                        <th>Manager</th>
+                        <th>Risk</th>
+                        <th>Order Status</th>
+                        <th>Created At</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="conversationTableBody">
+
+                    {% for conv in conversations %}
+                    <tr class="conversation-row">
+
+                        <td>
+                            <div class="customer-info">
+                                <div class="customer-avatar">
+                                    {% if conv.user.first_name %}
+                                        {{ conv.user.first_name|slice:":1"|upper }}
+                                    {% else %}
+                                        U
+                                    {% endif %}
+                                </div>
+
+                                <div>
+                                    <div class="customer-name">
+                                        {{ conv.user.first_name }}
+                                        {{ conv.user.last_name }}
+                                    </div>
+                                    <div class="customer-label">
+                                        Customer
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <span class="order-id">
+                                #{{ conv.order.id }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="product-name">
+                                {{ conv.order.product_name|default:"—" }}
+                            </span>
+                        </td>
+
+                        <td>
+                            {% if conv.manager_involved %}
+                                <span class="agent-badge manager-yes">
+                                    ● Involved
+                                </span>
+                            {% else %}
+                                <span class="not-involved">—</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if conv.risk_assessed %}
+                                <span class="agent-badge risk-yes">
+                                    ● Assessed
+                                </span>
+                            {% else %}
+                                <span class="not-involved">—</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if conv.order.status == 'pending' %}
+                                <span class="status-badge status-pending">
+                                    Pending
+                                </span>
+                            {% elif conv.order.status == 'dispatched' %}
+                                <span class="status-badge status-dispatched">
+                                    Dispatched
+                                </span>
+                            {% elif conv.order.status == 'delivered' %}
+                                <span class="status-badge status-delivered">
+                                    Delivered
+                                </span>
+                            {% elif conv.order.status == 'cancelled' %}
+                                <span class="status-badge status-cancelled">
+                                    Cancelled
+                                </span>
+                            {% else %}
+                                <span class="not-involved">
+                                    {{ conv.order.status|default:"Unknown"|title }}
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <span class="date-text">
+                                {{ conv.created_at|date:"d M Y, h:i A" }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <a
+                                href="{% url 'conversation_detail' conv.id %}"
+                                class="view-btn"
+                            >
+                                View Details
+                                <span>↗</span>
+                            </a>
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="empty-state">
+                            <div class="empty-icon">💬</div>
+                            <div class="fw-bold mb-2" style="color:#374151;">
+                                No conversations yet
+                            </div>
+                            <div style="font-size:12px;">
+                                Customer conversations will appear here when available.
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-footer">
+            <span id="conversationCount">
+                {{ conversations|length }} conversation{{ conversations|length|pluralize }}
+            </span>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("conversationSearch");
+        const rows = document.querySelectorAll(
+            "#conversationTableBody .conversation-row"
+        );
+        const countElement = document.getElementById("conversationCount");
+
+        function updateCount(count) {
+            countElement.textContent =
+                count + " conversation" + (count === 1 ? "" : "s");
+        }
+
+        searchInput.addEventListener("input", function () {
+            const query = this.value.trim().toLowerCase();
+            let visibleCount = 0;
+
+            rows.forEach(function (row) {
+                const matches = row.textContent
+                    .toLowerCase()
+                    .includes(query);
+
+                row.style.display = matches ? "" : "none";
+
+                if (matches) {
+                    visibleCount++;
+                }
+            });
+
+            updateCount(visibleCount);
+        });
+    });
+</script>
+
+{% endblock %}

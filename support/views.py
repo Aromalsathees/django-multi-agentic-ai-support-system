@@ -46,7 +46,7 @@ def dashboard(request):
     context = {
         'conversations': conversations,
     }
-    return render(request, "support/dashboard.html", context)
+    return render(request, "dashboard/dashboard.html", context)
 
 
 @staff_member_required
@@ -60,7 +60,7 @@ def conversation_detail(request, conversation_id):
         "messages": messages,
         "agentlogs": agentlogs
     }
-    return render(request, "support/conversation_detail.html", context)
+    return render(request, "dashboard/conversation_detail.html", context)
 
 
 # @staff_member_required

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>CoolBreeze | AI Support Dashboard</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    />
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet"
+    />
+
+    <style>
+        :root {
+            --sidebar-bg: #17182d;
+            --sidebar-text: #a5abc3;
+            --accent: #7569f6;
+            --page-bg: #f6f7fb;
+            --text-dark: #20243a;
+            --border-color: #eceef4;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--page-bg);
+            color: var(--text-dark);
+            font-family: Inter, -apple-system, BlinkMacSystemFont,
+                         "Segoe UI", sans-serif;
+            font-size: 14px;
+        }
+
+        .app-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+
+        .sidebar {
+            width: 250px;
+            min-width: 250px;
+            background: var(--sidebar-bg);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 17px 18px;
+            transition: transform .25s ease;
+            z-index: 1050;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 8px 27px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .brand-icon {
+            width: 41px;
+            height: 41px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #8175ff, #5146cf);
+            font-size: 21px;
+            box-shadow: 0 5px 16px rgba(117, 105, 246, .25);
+        }
+
+        .brand-name {
+            font-size: 15px;
+            font-weight: 750;
+            letter-spacing: -.3px;
+        }
+
+        .brand-caption {
+            font-size: 10px;
+            color: #969cb8;
+            margin-top: 3px;
+        }
+
+        .nav-section-title {
+            color: #747b9b;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 700;
+            padding: 8px 12px 12px;
+        }
+
+        .sidebar .nav-link {
+            color: var(--sidebar-text);
+            padding: 12px 13px;
+            margin-bottom: 5px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            font-weight: 550;
+            transition: all .2s ease;
+        }
+
+        .sidebar .nav-link i {
+            font-size: 17px;
+        }
+
+        .sidebar .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, .06);
+        }
+
+        .sidebar .nav-link.active {
+            background: linear-gradient(100deg, #7569f6, #6357e9);
+            color: white;
+            box-shadow: 0 5px 14px rgba(99, 87, 233, .22);
+        }
+
+        .sidebar-divider {
+            border-color: rgba(255, 255, 255, .09);
+            margin: 19px 0;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+        }
+
+        .system-status {
+            padding: 13px;
+            border: 1px solid rgba(255, 255, 255, .09);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, .035);
+            margin-bottom: 18px;
+        }
+
+        .system-status-title {
+            font-size: 11px;
+            font-weight: 650;
+            margin-bottom: 7px;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #35d49a;
+            margin-right: 6px;
+        }
+
+        .system-status-caption {
+            color: #9299b5;
+            font-size: 10px;
+        }
+
+        .profile-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 7px 0;
+            border-top: 1px solid rgba(255, 255, 255, .09);
+        }
+
+        .profile-avatar {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 11px;
+            background: #34334f;
+            color: #d9d6ff;
+            font-size: 14px;
+            font-weight: 750;
+        }
+
+        .profile-name {
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+        .profile-role {
+            font-size: 10px;
+            color: #949bb7;
+            margin-top: 3px;
+        }
+
+        /* Main area */
+
+        .main-wrapper {
+            min-width: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            height: 74px;
+            min-height: 74px;
+            background: #fff;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            gap: 15px;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .breadcrumb-label {
+            color: #9299aa;
+            font-size: 11px;
+        }
+
+        .breadcrumb-current {
+            font-size: 12px;
+            font-weight: 700;
+            color: #30354a;
+            margin-top: 4px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 17px;
+        }
+
+        .topbar-date {
+            font-size: 11px;
+            color: #8d95a7;
+        }
+
+        .topbar-icon {
+            width: 36px;
+            height: 36px;
+            border: 1px solid #eceef4;
+            background: #fff;
+            color: #697187;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .topbar-icon i {
+            font-size: 16px;
+        }
+
+        .menu-toggle {
+            display: none;
+            border: 0;
+            background: #f1f0ff;
+            color: var(--accent);
+            padding: 8px 10px;
+            border-radius: 9px;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 29px 30px;
+            min-width: 0;
+        }
+
+        .content-area > * {
+            max-width: 100%;
+        }
+
+        .footer {
+            padding: 16px 30px;
+            color: #9ba2b1;
+            font-size: 10px;
+            border-top: 1px solid #eceef4;
+            background: #fff;
+        }
+
+        /* Mobile */
+
+        .sidebar-overlay {
+            display: none;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                transform: translateX(-100%);
+                overflow-y: auto;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .sidebar-overlay.show {
+                display: block;
+                position: fixed;
+                inset: 0;
+                background: rgba(15, 17, 35, .48);
+                z-index: 1040;
+            }
+
+            .menu-toggle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .topbar {
+                padding: 0 20px;
+            }
+
+            .content-area {
+                padding: 24px 20px;
+            }
+
+            .footer {
+                padding: 15px 20px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .topbar {
+                height: 65px;
+                min-height: 65px;
+                padding: 0 14px;
+            }
+
+            .topbar-date {
+                display: none;
+            }
+
+            .topbar-right {
+                gap: 8px;
+            }
+
+            .content-area {
+                padding: 19px 13px;
+            }
+
+            .footer {
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+
+        <a href="#" class="brand">
+            <div class="brand-icon">
+                <i class="bi bi-snow2"></i>
+            </div>
+
+            <div>
+                <div class="brand-name">CoolBreeze AI</div>
+                <div class="brand-caption">Intelligent Support System</div>
+            </div>
+        </a>
+
+        <div class="nav-section-title">Workspace</div>
+
+        <nav class="nav flex-column">
+
+            <a href="#" class="nav-link active">
+                <i class="bi bi-chat-square-text"></i>
+                <span>Conversations</span>
+            </a>
+
+        </nav>
+
+        <hr class="sidebar-divider"/>
+
+        <div class="nav-section-title">System</div>
+
+        <div class="system-status">
+            <div class="system-status-title">
+                <span class="status-dot"></span>
+                System Status
+            </div>
+
+            <div class="system-status-caption">
+                AI support workspace
+            </div>
+        </div>
+
+        <div class="sidebar-bottom">
+
+            <div class="profile-card">
+                <div class="profile-avatar">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+
+                <div>
+                    <div class="profile-name">Admin</div>
+                    <div class="profile-role">System Administrator</div>
+                </div>
+
+                <i
+                    class="bi bi-three-dots ms-auto"
+                    style="color:#9299b5;"
+                ></i>
+            </div>
+
+        </div>
+
+    </aside>
+
+    <!-- Mobile overlay -->
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+    ></div>
+
+    <!-- Main wrapper -->
+    <div class="main-wrapper">
+
+        <!-- Top Navigation -->
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    type="button"
+                    class="menu-toggle"
+                    id="menuToggle"
+                    aria-label="Toggle navigation"
+                    aria-expanded="false"
+                >
+                    <i class="bi bi-list fs-5"></i>
+                </button>
+
+                <div>
+                    <div class="breadcrumb-label">
+                        Workspace / Support
+                    </div>
+
+                    <div class="breadcrumb-current">
+                        AI Support Dashboard
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="topbar-date">
+                    <i class="bi bi-shield-check me-1"></i>
+                    AI-powered customer support
+                </div>
+
+                <div
+                    class="topbar-icon"
+                    title="Administrator"
+                    aria-label="Administrator"
+                >
+                    <i class="bi bi-person-circle"></i>
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- Page Content -->
+        <main class="content-area">
+
+            {% block content %}
+            {% endblock %}
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            © 2026 CoolBreeze AI · Intelligent Customer Support
+        </footer>
+
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const sidebar = document.getElementById("sidebar");
+        const toggle = document.getElementById("menuToggle");
+        const overlay = document.getElementById("sidebarOverlay");
+
+        function closeSidebar() {
+            sidebar.classList.remove("show");
+            overlay.classList.remove("show");
+            toggle.setAttribute("aria-expanded", "false");
+        }
+
+        toggle.addEventListener("click", function () {
+            const isOpen = sidebar.classList.toggle("show");
+
+            overlay.classList.toggle("show", isOpen);
+            toggle.setAttribute("aria-expanded", String(isOpen));
+        });
+
+        overlay.addEventListener("click", closeSidebar);
+
+        window.addEventListener("resize", function () {
+            if (window.innerWidth > 900) {
+                closeSidebar();
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

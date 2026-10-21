@@ -4,6 +4,7 @@ from .langchain_tools import get_order_details, get_refund_history, check_delive
 from .system_prompts import SUPPORT_SYSTEM_PROMPT
 from langchain.agents import create_agent
 from langgraph.checkpoint.memory import InMemorySaver
+from .models import Conversation, AgentLog
 
 llm = ChatGoogleGenerativeAI(model=settings.GEMINI_MODEL, api_key=settings.GEMINI_API_KEY,)
 
@@ -21,6 +22,7 @@ support_agent = create_agent(
 # The agent is ready now 
 
 def run_support_agent(user_message, conversation_id, order_id, user_id):
+    conv = Conversation.objects.get(id=conversation_id)
     config = {
         "configurable": {
             "thread_id": str(conversation_id)
@@ -44,19 +46,11 @@ def run_support_agent(user_message, conversation_id, order_id, user_id):
         config=config
     )
 
-    reply = result["messages"][-1].content
-    print("result ==>", reply)
-    return reply
-# def run_support_agent(user_message, conversation_id, order_id, user_id):
-#     config = {"configurable": {"thread_id": str(conversation_id)}}
+    rfinal_replyeply = result["messages"][-1].content
+    print("result ==>", final_reply)
 
-#     contextual_message = f"[Context: This Conversation is about Order #{order_id}, user: {user_id}]"
+    # save final reply to agent Log 
+    AgentLog.objects.create(conversation=conv, event_type="final", message=final_reply)
+    return final_reply
 
-#     result = support_agent.invoke(
-#         {"message": [{"role":"user", "content": contextual_message}]}, 
-#         config=config
-#     )
-    
-#     reply = result["messages"][-1].content
-#     print('result ==>', result)
 

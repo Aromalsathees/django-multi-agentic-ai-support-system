@@ -1,0 +1,773 @@
+{% extends "dashboard/dashboard_base.html" %}
+
+{% block content %}
+
+<style>
+    .detail-page {
+        color: #20243a;
+    }
+
+    .detail-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-bottom: 25px;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        color: #8b93a6;
+        font-size: 12px;
+        text-decoration: none;
+        margin-bottom: 13px;
+    }
+
+    .back-link:hover {
+        color: #7569f6;
+    }
+
+    .detail-title {
+        font-size: 24px;
+        font-weight: 750;
+        letter-spacing: -.7px;
+        margin: 0;
+    }
+
+    .detail-subtitle {
+        color: #9299aa;
+        font-size: 12px;
+        margin-top: 8px;
+    }
+
+    .conversation-id {
+        color: #7569f6;
+        background: #efedff;
+        padding: 5px 9px;
+        border-radius: 7px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .detail-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+        margin-top: 16px;
+    }
+
+    .meta-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border: 1px solid #e9ebf3;
+        background: #fff;
+        padding: 8px 11px;
+        border-radius: 9px;
+        font-size: 11px;
+        color: #687187;
+    }
+
+    .meta-chip i {
+        color: #7569f6;
+        font-size: 13px;
+    }
+
+    .detail-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+        gap: 18px;
+        align-items: stretch;
+    }
+
+    .panel {
+        min-width: 0;
+        height: calc(100vh - 300px);
+        min-height: 400px;
+        max-height: 700px;
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border: 1px solid #e9ecf3;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 18px rgba(30, 41, 59, .025);
+    }
+
+    .panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 18px 20px;
+        border-bottom: 1px solid #edf0f5;
+        background: #fff;
+    }
+
+    .panel-heading {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        min-width: 0;
+    }
+
+    .panel-icon {
+        width: 37px;
+        height: 37px;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 17px;
+    }
+
+    .chat-icon {
+        background: #efedff;
+        color: #7569f6;
+    }
+
+    .activity-icon {
+        background: #e5f8ef;
+        color: #219968;
+    }
+
+    .panel-title {
+        font-size: 13px;
+        font-weight: 750;
+        color: #292e43;
+        margin: 0;
+    }
+
+    .panel-description {
+        font-size: 10px;
+        color: #9ba2b1;
+        margin-top: 4px;
+    }
+
+    .live-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 9px;
+        background: #e8f8f0;
+        color: #208b60;
+        font-size: 10px;
+        font-weight: 700;
+        border-radius: 7px;
+        white-space: nowrap;
+    }
+
+    .live-dot {
+        width: 6px;
+        height: 6px;
+        background: #24b47e;
+        border-radius: 50%;
+    }
+
+    .panel-body {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        padding: 20px;
+        scrollbar-width: thin;
+        scrollbar-color: #dfe2eb transparent;
+    }
+
+    .panel-body::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .panel-body::-webkit-scrollbar-thumb {
+        background: #dfe2eb;
+        border-radius: 10px;
+    }
+
+    .chat-message {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 23px;
+    }
+
+    .chat-message.assistant {
+        align-items: flex-end;
+    }
+
+    .message-heading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 7px;
+        font-size: 10px;
+        color: #8992a6;
+    }
+
+    .message-avatar {
+        width: 24px;
+        height: 24px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 750;
+    }
+
+    .user-avatar {
+        background: #edf0f7;
+        color: #606b82;
+    }
+
+    .ai-avatar {
+        background: #efedff;
+        color: #7569f6;
+    }
+
+    .message-bubble {
+        max-width: 88%;
+        padding: 12px 14px;
+        border-radius: 4px 13px 13px 13px;
+        background: #f4f6fa;
+        color: #4c566d;
+        font-size: 12px;
+        line-height: 1.75;
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+    }
+
+    .assistant .message-bubble {
+        border-radius: 13px 4px 13px 13px;
+        background: #efedff;
+        color: #49418b;
+    }
+
+    .message-time {
+        color: #a5acb9;
+        font-size: 9px;
+        margin-top: 6px;
+    }
+
+    .activity-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .activity-entry {
+        position: relative;
+        padding: 0 0 22px 20px;
+        border-left: 1px solid #e9ecf3;
+        margin-left: 5px;
+    }
+
+    .activity-entry:last-child {
+        border-left-color: transparent;
+        padding-bottom: 0;
+    }
+
+    .activity-entry::before {
+        content: "";
+        position: absolute;
+        left: -4px;
+        top: 4px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #c5c9d8;
+        box-shadow: 0 0 0 3px #fff;
+    }
+
+    .activity-entry.type-tool_call::before {
+        background: #7569f6;
+    }
+
+    .activity-entry.type-tool_result::before {
+        background: #7f8ca5;
+    }
+
+    .activity-entry.type-manager::before {
+        background: #e5a32a;
+    }
+
+    .activity-entry.type-risk::before {
+        background: #e45d69;
+    }
+
+    .activity-entry.type-final::before {
+        background: #27a875;
+    }
+
+    .activity-topline {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 9px;
+    }
+
+    .event-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 8px;
+        border-radius: 6px;
+        font-size: 9px;
+        font-weight: 750;
+        letter-spacing: .15px;
+    }
+
+    .event-tool_call {
+        background: #eeedff;
+        color: #6558df;
+    }
+
+    .event-tool_result {
+        background: #edf0f5;
+        color: #647087;
+    }
+
+    .event-manager {
+        background: #fff3dc;
+        color: #a66d0a;
+    }
+
+    .event-risk {
+        background: #ffebed;
+        color: #d44757;
+    }
+
+    .event-final {
+        background: #e4f8ee;
+        color: #208b60;
+    }
+
+    .event-default {
+        background: #f0f2f6;
+        color: #6c7589;
+    }
+
+    .activity-time {
+        font-size: 10px;
+        color: #a0a7b5;
+    }
+
+    .activity-message {
+        margin: 0;
+        font-size: 11px;
+        line-height: 1.8;
+        color: #667086;
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+    }
+
+    .empty-activity {
+        text-align: center;
+        color: #969eb0;
+        padding: 45px 15px;
+        font-size: 12px;
+    }
+
+    .empty-activity i {
+        display: block;
+        font-size: 27px;
+        margin-bottom: 12px;
+        color: #b5bbca;
+    }
+
+    .spinner-area {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #8a91a4;
+        font-size: 11px;
+        padding: 12px 0 4px;
+    }
+
+    .connection-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #8d95a7;
+        font-size: 10px;
+    }
+
+    .connection-status.connected {
+        color: #229968;
+    }
+
+    .connection-status.disconnected {
+        color: #d45563;
+    }
+
+    @media (max-width: 1050px) {
+        .detail-layout {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .panel {
+            height: 480px;
+            max-height: none;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .detail-title {
+            font-size: 20px;
+        }
+
+        .panel {
+            height: 440px;
+            min-height: 350px;
+        }
+
+        .panel-header {
+            padding: 14px;
+        }
+
+        .panel-body {
+            padding: 15px;
+        }
+
+        .message-bubble {
+            max-width: 95%;
+        }
+    }
+</style>
+
+<div class="detail-page">
+
+    <!-- Header -->
+    <div class="detail-header">
+        <div>
+            <a href="{% url 'dashboard' %}" class="back-link">
+                <i class="bi bi-arrow-left"></i>
+                Back to Conversations
+            </a>
+
+            <div class="d-flex align-items-center flex-wrap gap-2">
+                <h4 class="detail-title">
+                    Conversation Details
+                </h4>
+
+                <span class="conversation-id">
+                    #{{ conversation.id }}
+                </span>
+            </div>
+
+            <p class="detail-subtitle mb-0">
+                Review customer messages and monitor AI agent execution.
+            </p>
+
+            <div class="detail-meta">
+                <span class="meta-chip">
+                    <i class="bi bi-person-circle"></i>
+                    {{ conversation.user.first_name }}
+                    {{ conversation.user.last_name }}
+                </span>
+
+                <span class="meta-chip">
+                    <i class="bi bi-box-seam"></i>
+                    Order #{{ conversation.order.id }}
+                </span>
+
+                <span class="meta-chip">
+                    <i class="bi bi-tag"></i>
+                    {{ conversation.order.product_name }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Two-column layout -->
+    <div class="detail-layout">
+
+        <!-- Chat Transcript -->
+        <section class="panel">
+
+            <div class="panel-header">
+                <div class="panel-heading">
+                    <div class="panel-icon chat-icon">
+                        <i class="bi bi-chat-left-text"></i>
+                    </div>
+
+                    <div>
+                        <h6 class="panel-title">Chat Transcript</h6>
+                        <div class="panel-description">
+                            Customer and AI conversation history
+                        </div>
+                    </div>
+                </div>
+
+                <span class="live-indicator">
+                    <span class="live-dot"></span>
+                    LIVE
+                </span>
+            </div>
+
+            <div class="panel-body" id="chat-transcript">
+
+                {% for msg in messages %}
+
+                    {% if msg.role == "user" %}
+
+                    <div class="chat-message">
+                        <div class="message-heading">
+                            <span class="message-avatar user-avatar">
+                                {{ conversation.user.first_name|slice:":1"|upper|default:"U" }}
+                            </span>
+
+                            <span>
+                                {{ conversation.user.first_name|default:"Customer" }}
+                            </span>
+                        </div>
+
+                        <div class="message-bubble">{{ msg.content }}</div>
+                    </div>
+
+                    {% else %}
+
+                    <div class="chat-message assistant">
+                        <div class="message-heading">
+                            <span>Maya · AI Agent</span>
+
+                            <span class="message-avatar ai-avatar">
+                                <i class="bi bi-stars"></i>
+                            </span>
+                        </div>
+
+                        <div class="message-bubble">{{ msg.content }}</div>
+                    </div>
+
+                    {% endif %}
+
+                {% empty %}
+
+                    <div class="empty-activity" id="empty-chat">
+                        <i class="bi bi-chat-square-dots"></i>
+                        No messages in this conversation yet.
+                    </div>
+
+                {% endfor %}
+
+            </div>
+        </section>
+
+        <!-- Agent Activity -->
+        <section class="panel">
+
+            <div class="panel-header">
+                <div class="panel-heading">
+                    <div class="panel-icon activity-icon">
+                        <i class="bi bi-cpu"></i>
+                    </div>
+
+                    <div>
+                        <h6 class="panel-title">Agent Activity</h6>
+                        <div class="panel-description">
+                            Tool execution, risk checks and decisions
+                        </div>
+                    </div>
+                </div>
+
+                <span class="connection-status" id="connection-status">
+                    <span class="live-dot"></span>
+                    Connecting
+                </span>
+            </div>
+
+            <div class="panel-body">
+                <div class="activity-list" id="agent-activity">
+
+                    {% for log in agentlogs %}
+
+                    <div class="activity-entry type-{{ log.event_type }}">
+                        <div class="activity-topline">
+
+                            {% if log.event_type == "tool_call" %}
+                                <span class="event-badge event-tool_call">
+                                    TOOL CALL
+                                </span>
+                            {% elif log.event_type == "tool_result" %}
+                                <span class="event-badge event-tool_result">
+                                    TOOL RESULT
+                                </span>
+                            {% elif log.event_type == "manager" %}
+                                <span class="event-badge event-manager">
+                                    MANAGER
+                                </span>
+                            {% elif log.event_type == "risk" %}
+                                <span class="event-badge event-risk">
+                                    RISK ASSESSMENT
+                                </span>
+                            {% elif log.event_type == "final" %}
+                                <span class="event-badge event-final">
+                                    FINAL RESPONSE
+                                </span>
+                            {% else %}
+                                <span class="event-badge event-default">
+                                    {{ log.event_type|upper }}
+                                </span>
+                            {% endif %}
+
+                            <span class="activity-time">
+                                {{ log.created_at|date:"d M, h:i A" }}
+                            </span>
+                        </div>
+
+                        <p class="activity-message">{{ log.message }}</p>
+                    </div>
+
+                    {% empty %}
+
+                    <div class="empty-activity" id="empty-activity">
+                        <i class="bi bi-cpu"></i>
+                        No agent activity recorded yet.
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                <div class="spinner-area d-none" id="agent-spinner">
+                    <span
+                        class="spinner-border spinner-border-sm"
+                        role="status"
+                    ></span>
+                    <span>Maya is processing...</span>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const chatTranscript = document.getElementById("chat-transcript");
+        const agentActivity = document.getElementById("agent-activity");
+        const spinner = document.getElementById("agent-spinner");
+        const connectionStatus = document.getElementById("connection-status");
+
+        const conversationId = {{ conversation.id }};
+        const streamUrl = `/support/dashboard/stream/${conversationId}/`;
+
+        let source = null;
+        let reconnectTimer = null;
+        let manuallyClosed = false;
+
+        function scrollToBottom(element) {
+            if (element) {
+                element.scrollTop = element.scrollHeight;
+            }
+        }
+
+        function setConnectionStatus(status, label) {
+            connectionStatus.className = "connection-status " + status;
+            connectionStatus.replaceChildren();
+
+            const dot = document.createElement("span");
+            dot.className = "live-dot";
+
+            connectionStatus.append(dot, document.createTextNode(label));
+        }
+
+        function hideEmptyState(id) {
+            document.getElementById(id)?.remove();
+        }
+
+        function appendMessage(role, name, message) {
+            hideEmptyState("empty-chat");
+
+            const isUser = role === "user";
+
+            const wrapper = document.createElement("div");
+            wrapper.className = "chat-message" + (isUser ? "" : " assistant");
+
+            const heading = document.createElement("div");
+            heading.className = "message-heading";
+
+            const avatar = document.createElement("span");
+            avatar.className = "message-avatar " +
+                (isUser ? "user-avatar" : "ai-avatar");
+
+            if (isUser) {
+                avatar.textContent = (name || "U").trim().charAt(0).toUpperCase() || "U";
+            } else {
+                const icon = document.createElement("i");
+                icon.className = "bi bi-stars";
+                avatar.appendChild(icon);
+            }
+
+            const label = document.createElement("span");
+            label.textContent = isUser ? name : name + " · AI Agent";
+
+            if (isUser) {
+                heading.append(avatar, label);
+            } else {
+                heading.append(label, avatar);
+            }
+
+            const bubble = document.createElement("div");
+            bubble.className = "message-bubble";
+            bubble.textContent = message;
+
+            wrapper.append(heading, bubble);
+            chatTranscript.appendChild(wrapper);
+
+            scrollToBottom(chatTranscript);
+        }
+
+        const badgeClasses = {
+            tool_call: "event-tool_call",
+            tool_result: "event-tool_result",
+            manager: "event-manager",
+            risk: "event-risk",
+            final: "event-final"
+        };
+
+        const eventLabels = {
+            tool_call: "TOOL CALL",
+            tool_result: "TOOL RESULT",
+            manager: "MANAGER",
+            risk: "RISK ASSESSMENT",
+            final: "FINAL RESPONSE"
+        };
+
+        function appendLog(type, message) {
+            hideEmptyState("empty-activity");
+
+            const entry = document.createElement("div");
+            entry.className = "activity-entry type-" + type;
+
+            const topLine = document.createElement("div");
+            topLine.className = "activity-topline";
+
+            const badge = document.createElement("span");
+            badge.className = "event-badge " +
+                (badgeClasses[type] || "event-default");
+            badge.textContent = eventLabels[type] || type.toUpperCase();
+
+            const time = document.createElement("span");
+            time.className = "activity-time";
+            time.textContent = new Date().toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true
+            });
+
+            const description = document.createElement("p");
+            description.className = "activity-message";
+            description.textContent = message;
+
+            topLine.append(badge, time);
+            entry.append(topLine, description);
+            agentActivity.appendChild(entry);
+
+            scrollToBottom(agentActivity);
+
+{% endblock %}

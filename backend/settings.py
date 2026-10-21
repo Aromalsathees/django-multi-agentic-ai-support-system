@@ -28,6 +28,9 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(",")
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://django-multi-agentic-ai-support-system-production.up.railway.app",
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -141,3 +144,4 @@ GEMINI_MODEL = config("GEMINI_MODEL", default="gemini-3.5-flash-lite")
 LOGIN_URL = "login_view"
 LOGIN_REDIRECT_URL = "orders_list"
 LOGOUT_REDIRECT_URL = "login_view"
+

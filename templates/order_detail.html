@@ -1133,28 +1133,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             // Uses the current order's chat URL
-            const response = await fetch(
-                window.location.pathname.replace(/\/?$/, "/").replace(
-                    /\/order\/(\d+)\/$/,
-                    "/chat/$1/"
-                ),
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRFToken": csrfToken || "",
-                        "X-Requested-With": "XMLHttpRequest"
-                    },
-                    credentials: "same-origin",
-                    body: JSON.stringify({ message })
-                }
-            );
 
-            const data = await response.json();
+const orderId = "{{ order.id }}";
 
-            if (!response.ok) {
-                throw new Error(data.error || `Request failed (${response.status})`);
-            }
+const response = await fetch(`/support/chat/${orderId}/`, {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken || "",
+        "X-Requested-With": "XMLHttpRequest"
+    },
+    credentials: "same-origin",
+    body: JSON.stringify({ message })
+});
+
+const data = await response.json();
+
+if (!response.ok) {
+    throw new Error(data.error || `Request failed: ${response.status}`);
+}
 
             const replyText = getReplyText(data.reply);
 
@@ -1167,8 +1164,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             console.error("Chat error:", error);
             addMessage(
-                `Sorry, something went wrong: ${error.message}`,
-                "assistant"
+                "Sorry, something went wrong",  
             );
         } finally {
             typing.remove();

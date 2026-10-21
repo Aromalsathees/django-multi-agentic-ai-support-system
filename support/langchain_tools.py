@@ -96,6 +96,34 @@ def get_customer_risk_profile(user_id: int) -> dict:
 
 
 @tool
+def get_customer_risk_profile(user_id):
+    """Get complete risk profile for a customer including order history, refund patterns and ratio. Use this to assess fraud risk."""
+    
+    refunds = RefundReQuest.objects.filter(user_id=user_id)
+    orders = Order.objects.filter(user_id=user_id)
+    recent_refunds = refunds.filter(
+        created_at__gte=timezone.now() - timedelta(days=90)
+    ).count()
+    denied = refunds.filter(status="denied").count()
+    approved = refunds.filter(status="approved").count()
+    pending = refunds.filter(status="pending").count()
+    total_orders = orders.count()
+    total_refunds = refunds.count()
+    refund_to_order_ratio = round(total_refunds / total_orders, 2) if total_orders else 0
+    return {
+        "user_id": user_id,
+        "total_orders": total_orders,
+        "total_refund_requests": total_refunds,
+        "refunds_last_90_days": recent_refunds,
+        "denied_refunds": denied,
+        "approved_refunds": approved,
+        "pending_refunds": pending,
+        "refund_to_order_ratio": refund_to_order_ratio,
+    }
+
+
+@tool
 def search_knowledge_base(query: str) -> dict:
     """Search the support knowledge base for information relevant to a customer query."""
     return {"result": rag_search(query)}
+

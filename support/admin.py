@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Conversation, Message
+from .models import Conversation, Message, AgentLog
 # Register your models here.
 
 
@@ -11,3 +11,4 @@ class AdminMessage(admin.ModelAdmin):
 
 admin.site.register(Conversation, AdminConversation)
 admin.site.register(Message, AdminMessage)
+admin.site.register(AgentLog)

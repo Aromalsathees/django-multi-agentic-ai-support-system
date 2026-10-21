@@ -1032,155 +1032,154 @@ What would you like to know about your order today?</div>
 </main>
 
 <script>
-  const helpCard = document.getElementById("help-card");
-  const chatBox = document.getElementById("chat-box");
-  const messages = document.getElementById("chat-messages");
-  const input = document.getElementById("chat-input");
-  const sendBtn = document.getElementById("send-btn");
-  const chatForm = document.getElementById("chat-form");
+document.addEventListener("DOMContentLoaded", () => {
+    const chatBox = document.getElementById("chat-box");
+    const chatMessages = document.querySelector(".chat-messages");
+    const chatForm = document.querySelector(".chat-form");
+    const chatInput = document.querySelector(".chat-input");
+    const sendButton = document.querySelector(".send-btn");
+    const startChatButton = document.querySelector(".start-chat-btn");
 
-  let isSending = false;
-  let typingElement = null;
-
-  function showChat() {
-    helpCard.style.display = "none";
-    chatBox.classList.add("visible");
-    scrollToBottom();
-    input.focus();
-  }
-
-  function closeChat() {
-    chatBox.classList.remove("visible");
-    helpCard.style.display = "block";
-  }
-
-  function scrollToBottom() {
-    messages.scrollTop = messages.scrollHeight;
-  }
-
-  function appendMessage(text, type) {
-    const isCustomer = type === "customer";
-
-    const wrap = document.createElement("div");
-    wrap.className = "message-wrap " +
-      (isCustomer ? "customer-wrap" : "agent-wrap");
-
-    const meta = document.createElement("div");
-    meta.className = "message-meta";
-    meta.textContent = isCustomer ? "You" : "AroCode AI";
-
-    const bubble = document.createElement("div");
-    bubble.className = isCustomer ? "customer-message" : "agent-message";
-
-    // textContent prevents server replies from being interpreted as HTML.
-    bubble.textContent = text;
-
-    wrap.appendChild(meta);
-    wrap.appendChild(bubble);
-    messages.appendChild(wrap);
-
-    scrollToBottom();
-  }
-
-  function showTyping() {
-    if (typingElement) return;
-
-    typingElement = document.createElement("div");
-    typingElement.className = "typing-indicator";
-    typingElement.textContent = "AroCode AI is thinking ";
-    
-    const dots = document.createElement("span");
-    dots.textContent = "•••";
-    typingElement.appendChild(dots);
-
-    messages.appendChild(typingElement);
-    scrollToBottom();
-  }
-
-  function hideTyping() {
-    if (typingElement) {
-      typingElement.remove();
-      typingElement = null;
-    }
-  }
-
-  function getCsrfToken() {
-    const cookie = document.cookie
-      .split("; ")
-      .find(row => row.startsWith("csrftoken="));
-
-    if (cookie) {
-      return decodeURIComponent(cookie.split("=").slice(1).join("="));
+    if (!chatMessages || !chatForm || !chatInput || !sendButton) {
+        console.error("Chat elements not found. Check your HTML IDs/classes.");
+        return;
     }
 
-    // Fallback when the token is supplied through Django's template.
-    return "{{ csrf_token }}";
-  }
+    // CSRF token from Django template
+    const csrfToken =
+        document.querySelector('[name=csrfmiddlewaretoken]')?.value;
 
-  async function sendMessage() {
-    const message = input.value.trim();
+    // Start chat button
+    startChatButton?.addEventListener("click", () => {
+        chatBox?.classList.add("visible");
+        startChatButton.closest(".help-intro")?.classList.add("d-none");
+        chatInput.focus();
+    });
 
-    if (!message || isSending) return;
-
-    showChat();
-    appendMessage(message, "customer");
-
-    input.value = "";
-    isSending = true;
-    input.disabled = true;
-    sendBtn.disabled = true;
-
-    const typingTimeout = setTimeout(showTyping, 500);
-
-    try {
-      const response = await fetch("/chat/{{ order.id }}/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": getCsrfToken()
-        },
-        body: JSON.stringify({ message: message })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "The support request failed.");
-      }
-
-      if (typeof data.reply !== "string") {
-        throw new Error("The server returned an invalid response.");
-      }
-
-      appendMessage(data.reply, "agent");
-
-    } catch (error) {
-      console.error("Chat error:", error);
-
-      appendMessage(
-        "Sorry, I couldn't process that message. Please try again.",
-        "agent"
-      );
-
-    } finally {
-      clearTimeout(typingTimeout);
-      hideTyping();
-
-      isSending = false;
-      input.disabled = false;
-      sendBtn.disabled = false;
-      input.focus();
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
     }
-  }
 
-  chatForm.addEventListener("submit", function(event) {
-    event.preventDefault();
-    sendMessage();
-  });
+    function addMessage(text, role) {
+        const isCustomer = role === "user";
 
-  scrollToBottom();
+        const wrapper = document.createElement("div");
+        wrapper.className = `message-wrap ${
+            isCustomer ? "customer-wrap" : "agent-wrap"
+        }`;
+
+        const meta = document.createElement("div");
+        meta.className = "message-meta";
+        meta.textContent = isCustomer ? "You" : "AroCode AI";
+
+        const bubble = document.createElement("div");
+        bubble.className = isCustomer ? "customer-message" : "agent-message";
+
+        // Safe text rendering; do not inject AI output as HTML
+        bubble.textContent = text;
+
+        wrapper.append(meta, bubble);
+        chatMessages.appendChild(wrapper);
+        scrollToBottom();
+
+        return wrapper;
+    }
+
+    function getReplyText(reply) {
+        // Normal Django string response
+        if (typeof reply === "string") {
+            return reply;
+        }
+
+        // Some agent SDKs return content blocks
+        if (Array.isArray(reply)) {
+            return reply
+                .map(item => {
+                    if (typeof item === "string") return item;
+                    if (item && typeof item.text === "string") {
+                        return item.text;
+                    }
+                    return "";
+                })
+                .filter(Boolean)
+                .join("\n");
+        }
+
+        if (reply && typeof reply.text === "string") {
+            return reply.text;
+        }
+
+        return "I received a response, but couldn't display its format.";
+    }
+
+    chatForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const message = chatInput.value.trim();
+
+        if (!message || sendButton.disabled) return;
+
+        // Show customer's message immediately
+        addMessage(message, "user");
+        chatInput.value = "";
+        sendButton.disabled = true;
+        chatInput.disabled = true;
+
+        const typing = document.createElement("div");
+        typing.className = "typing-indicator";
+        typing.textContent = "AroCode AI is thinking...";
+        chatMessages.appendChild(typing);
+        scrollToBottom();
+
+        try {
+            // Uses the current order's chat URL
+            const response = await fetch(
+                window.location.pathname.replace(/\/?$/, "/").replace(
+                    /\/order\/(\d+)\/$/,
+                    "/chat/$1/"
+                ),
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": csrfToken || "",
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ message })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || `Request failed (${response.status})`);
+            }
+
+            const replyText = getReplyText(data.reply);
+
+            if (!replyText.trim()) {
+                throw new Error("The AI returned an empty response.");
+            }
+
+            addMessage(replyText, "assistant");
+
+        } catch (error) {
+            console.error("Chat error:", error);
+            addMessage(
+                `Sorry, something went wrong: ${error.message}`,
+                "assistant"
+            );
+        } finally {
+            typing.remove();
+            sendButton.disabled = false;
+            chatInput.disabled = false;
+            chatInput.focus();
+            scrollToBottom();
+        }
+    });
+});
 </script>
-
 </body>
 </html>
 

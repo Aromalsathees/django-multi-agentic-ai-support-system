@@ -23,3 +23,4 @@ def order_detail(request, order_id):
         'refunds': refunds,
     }
     return render(request, "order_detail.html", context)
+

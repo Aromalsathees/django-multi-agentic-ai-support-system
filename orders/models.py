@@ -28,6 +28,14 @@ class Order(models.Model):
     tracking_number = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
+    slug = models.SlugField(unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            super().save(*args, **kwargs)  # Create the order so it gets an ID
+            self.slug = slugify(f"order-{self.id}")
+            return super().save(update_fields=["slug"])
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Order #{self.id} - {self.product_name} ({self.status})"

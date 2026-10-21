@@ -46,7 +46,7 @@ def run_support_agent(user_message, conversation_id, order_id, user_id):
         config=config
     )
 
-    rfinal_replyeply = result["messages"][-1].content
+    final_reply = result["messages"][-1].content
     print("result ==>", final_reply)
 
     # save final reply to agent Log 

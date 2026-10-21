@@ -137,3 +137,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
 
 GEMINI_API_KEY = config("GEMINI_API_KEY", default="")
 GEMINI_MODEL = config("GEMINI_MODEL", default="gemini-3.5-flash-lite")
+
+LOGIN_URL = "login_view"
+LOGIN_REDIRECT_URL = "orders_list"
+LOGOUT_REDIRECT_URL = "login_view"

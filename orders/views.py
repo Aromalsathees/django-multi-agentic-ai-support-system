@@ -11,7 +11,7 @@ def orders_list(request):
     }
     return render(request, 'orders_list.html', context)
 
-
+@login_required(login_url='login_view')
 def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
 

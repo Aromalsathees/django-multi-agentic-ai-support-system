@@ -28,7 +28,7 @@ class Order(models.Model):
     tracking_number = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
-    slug = models.SlugField(unique=True, blank=True)
+    
 
     def save(self, *args, **kwargs):
         if not self.slug:

@@ -6,7 +6,7 @@ class ProductAdminPanel(admin.ModelAdmin):
 
 class OrderAdminPanel(admin.ModelAdmin):
     list_display = ('user', 'product', 'delivery', 'status')
-    prepopulated_fields = {'slug': ('product_name',)}
+    
 
 class RefundAdminpanel(admin.ModelAdmin):
     list_display = ('user','order','reason', 'STATUS_CHOICES', 'status')

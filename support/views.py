@@ -63,19 +63,42 @@ def conversation_detail(request, conversation_id):
     return render(request, "dashboard/conversation_detail.html", context)
 
 
-# @staff_member_required
+
 def conversation_stream(request, conversation_id):
-    def event_stream(conversation_id):
-        q = subscribe(conversation_id)
+
+    # Verify that this user is allowed to access the conversation.
+    conversation = get_object_or_404(
+        Conversation,
+        id=conversation_id,
+        user=request.user,
+    )
+
+    def event_stream():
+        q = subscribe(conversation.id)
 
         try:
+            yield 'data: {"type": "connected"}\n\n'
+
             while True:
-                event = q.get() # wait for the next event
+                try:
+                    event = q.get(timeout=15)
+                except Exception:
+                    # Keep the SSE connection alive.
+                    yield ": keep-alive\n\n"
+                    continue
 
                 yield f"data: {json.dumps(event)}\n\n"
+
+                if event.get("type") == "done":
+                    break
+
         finally:
-            unsubscribe(conversation_id, q)
-    response = StreamingHttpResponse(event_stream(conversation_id), content_type="text/event-stream")
+            unsubscribe(conversation.id, q)
+
+    response = StreamingHttpResponse(
+        event_stream(),
+        content_type="text/event-stream",
+    )
     response["Cache-Control"] = "no-cache"
     response["X-Accel-Buffering"] = "no"
     return response

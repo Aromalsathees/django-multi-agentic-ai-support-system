@@ -1033,6 +1033,244 @@ What would you like to know about your order today?</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+
+    const chatBox = document.getElementById("chat-box");
+    const chatMessages = document.querySelector(".chat-messages");
+    const chatForm = document.querySelector(".chat-form");
+    const chatInput = document.querySelector(".chat-input");
+    const sendButton = document.querySelector(".send-btn");
+    const startChatButton = document.querySelector(".start-chat-btn");
+
+    if (!chatMessages || !chatForm || !chatInput || !sendButton) {
+        console.error("Chat elements not found. Check your HTML IDs/classes.");
+        return;
+    }
+
+    // CSRF token from Django template
+    const csrfToken =
+        document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+
+    // SSE connection variables
+    let eventSource = null;
+    let currentConversationId = null;
+
+    // Start the SSE connection for a conversation
+    function connectSSE(conversationId) {
+        if (!conversationId) {
+            console.warn("Cannot connect SSE: conversation ID is missing.");
+            return;
+        }
+
+        // Do not open duplicate connections for the same conversation
+        if (
+            eventSource &&
+            currentConversationId === String(conversationId) &&
+            eventSource.readyState !== EventSource.CLOSED
+        ) {
+            return;
+        }
+
+        if (eventSource) {
+            eventSource.close();
+        }
+
+        currentConversationId = String(conversationId);
+
+        eventSource = new EventSource(
+            `/support/conversations/${encodeURIComponent(currentConversationId)}/stream/`
+        );
+
+        eventSource.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+
+                if (data.type === "connected") {
+                    console.log("SSE connected:", currentConversationId);
+                    return;
+                }
+
+                if (data.type === "done") {
+                    console.log("Agent processing completed");
+                    return;
+                }
+
+                // Display live agent status/messages
+                if (data.message) {
+                    addMessage(`[${data.type}] ${data.message}`, "assistant");
+                }
+            } catch (error) {
+                console.error("Invalid SSE event:", error);
+            }
+        };
+
+        eventSource.onerror = (error) => {
+            console.error("SSE connection error:", error);
+            // EventSource automatically attempts to reconnect.
+        };
+    }
+
+    // Start chat button
+    startChatButton?.addEventListener("click", () => {
+        chatBox?.classList.add("visible");
+        startChatButton.closest(".help-intro")?.classList.add("d-none");
+        chatInput.focus();
+    });
+
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function addMessage(text, role) {
+        const isCustomer = role === "user";
+
+        const wrapper = document.createElement("div");
+        wrapper.className = `message-wrap ${
+            isCustomer ? "customer-wrap" : "agent-wrap"
+        }`;
+
+        const meta = document.createElement("div");
+        meta.className = "message-meta";
+        meta.textContent = isCustomer ? "You" : "AroCode AI";
+
+        const bubble = document.createElement("div");
+        bubble.className = isCustomer ? "customer-message" : "agent-message";
+
+        // Safe text rendering; do not inject AI output as HTML
+        bubble.textContent = text;
+
+        wrapper.append(meta, bubble);
+        chatMessages.appendChild(wrapper);
+        scrollToBottom();
+
+        return wrapper;
+    }
+
+    function getReplyText(reply) {
+        // Normal Django string response
+        if (typeof reply === "string") {
+            return reply;
+        }
+
+        // Some agent SDKs return content blocks
+        if (Array.isArray(reply)) {
+            return reply
+                .map(item => {
+                    if (typeof item === "string") return item;
+
+                    if (item && typeof item.text === "string") {
+                        return item.text;
+                    }
+
+                    return "";
+                })
+                .filter(Boolean)
+                .join("\n");
+        }
+
+        if (reply && typeof reply.text === "string") {
+            return reply.text;
+        }
+
+        return "I received a response, but couldn't display its format.";
+    }
+
+    chatForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const message = chatInput.value.trim();
+
+        if (!message || sendButton.disabled) return;
+
+        // Show customer's message immediately
+        addMessage(message, "user");
+        chatInput.value = "";
+        sendButton.disabled = true;
+        chatInput.disabled = true;
+
+        const typing = document.createElement("div");
+        typing.className = "typing-indicator";
+        typing.textContent = "AroCode AI is thinking...";
+        chatMessages.appendChild(typing);
+        scrollToBottom();
+
+        try {
+            // Uses the current order's chat URL
+            const orderId = "{{ order.id }}";
+
+            const response = await fetch(`/support/chat/${orderId}/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrfToken || "",
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                credentials: "same-origin",
+                body: JSON.stringify({ message })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.error || `Request failed: ${response.status}`
+                );
+            }
+
+            // Start SSE if the response provides a conversation ID
+            const conversationId =
+                data.conversation_id ??
+                data.conversation?.id ??
+                data.conversation?.conversation_id;
+
+            if (conversationId) {
+                connectSSE(conversationId);
+            }
+
+            const replyText = getReplyText(data.reply);
+
+            if (!replyText.trim()) {
+                throw new Error("The AI returned an empty response.");
+            }
+
+            addMessage(replyText, "assistant");
+
+        } catch (error) {
+            console.error("Chat error:", error);
+
+            addMessage(
+                "Sorry, something went wrong. Please try again.",
+                "assistant"
+            );
+
+        } finally {
+            typing.remove();
+            sendButton.disabled = false;
+            chatInput.disabled = false;
+            chatInput.focus();
+            scrollToBottom();
+        }
+    });
+
+    // Connect to an existing conversation rendered by Django, if available.
+    const existingConversationId =
+        "{% if conversation %}{{ conversation.id|escapejs }}{% endif %}";
+
+    if (existingConversationId) {
+        connectSSE(existingConversationId);
+    }
+
+    // Close the SSE connection when the page is being unloaded.
+    window.addEventListener("beforeunload", () => {
+        if (eventSource) {
+            eventSource.close();
+        }
+    });
+
+});
+</script>
+{% comment %} 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
     const chatBox = document.getElementById("chat-box");
     const chatMessages = document.querySelector(".chat-messages");
     const chatForm = document.querySelector(".chat-form");
@@ -1175,7 +1413,7 @@ if (!response.ok) {
         }
     });
 });
-</script>
+</script> {% endcomment %}
 </body>
 </html>
 

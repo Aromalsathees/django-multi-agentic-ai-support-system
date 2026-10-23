@@ -10,6 +10,7 @@ from .models import Conversation, Message
 from orders.models import Order
 from django.contrib.admin.views.decorators import staff_member_required
 
+from queue import Empty
 
 
 def chat(request, order_id):
@@ -66,7 +67,7 @@ def conversation_detail(request, conversation_id):
 
 def conversation_stream(request, conversation_id):
 
-    # Verify that this user is allowed to access the conversation.
+    # Verify that the user is allowed to access this conversation
     conversation = get_object_or_404(
         Conversation,
         id=conversation_id,
@@ -77,28 +78,37 @@ def conversation_stream(request, conversation_id):
         q = subscribe(conversation.id)
 
         try:
+            # Notify the client that the connection is established
             yield 'data: {"type": "connected"}\n\n'
 
             while True:
                 try:
+                    # Wait for the next event
                     event = q.get(timeout=15)
-                except Exception:
-                    # Keep the SSE connection alive.
+
+                except Empty:
+                    # Send heartbeat to keep the connection alive
                     yield ": keep-alive\n\n"
                     continue
 
+                # Send the event immediately to the client
                 yield f"data: {json.dumps(event)}\n\n"
 
+                # Stop streaming when the agent finishes
                 if event.get("type") == "done":
                     break
 
         finally:
+            # Clean up the subscription when the stream closes
             unsubscribe(conversation.id, q)
 
     response = StreamingHttpResponse(
         event_stream(),
         content_type="text/event-stream",
     )
-    response["Cache-Control"] = "no-cache"
+
+    # Prevent caching and discourage proxy buffering
+    response["Cache-Control"] = "no-cache, no-transform"
     response["X-Accel-Buffering"] = "no"
+
     return response
